@@ -10,7 +10,7 @@ namespace FishfryTours.Models
 
 	public class DatabaseContext : DbContext
 	{
-		public DatabaseContext() : base("name=FishfryDBConnection")
+		public DatabaseContext() : base("FishfryDBConnection")
 		{
 		}
 
