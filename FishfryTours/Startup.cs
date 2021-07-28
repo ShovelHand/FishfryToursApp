@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Http;
 using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using React.AspNet;
+using FishfryTours.Models;
+
 namespace FishfryTours
 {
 	public class Startup
@@ -33,6 +35,7 @@ namespace FishfryTours
 			// Make sure a JS engine is registered, or you will get an error!
 			services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName).AddV8();
 			services.AddControllersWithViews();
+		//	services.AddDbContext<DatabaseContext>(options =>options.UseSqlite("Data Source=localdatabase.db"));
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
