@@ -159,3 +159,6 @@ C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Debug\n
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Debug\netcoreapp3.1\FishfryTours.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Debug\netcoreapp3.1\FishfryTours.pdb
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Debug\netcoreapp3.1\FishfryTours.genruntimeconfig.cache
+C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Debug\netcoreapp3.1\FishfryTours.Migrations.AddProperty.resources
+C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Debug\netcoreapp3.1\FishfryTours.csproj.GenerateResource.cache
+C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Debug\netcoreapp3.1\Razor\Views\Boats\Boats.cshtml.g.cs

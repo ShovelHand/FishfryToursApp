@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace FishfryTours.Controllers
 {
-	public class HomeController : Controller
+	public class BoatsController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
+		private readonly ILogger<BoatsController> _logger;
 
-		public HomeController(ILogger<HomeController> logger)
+		public BoatsController(ILogger<BoatsController> logger)
 		{
 			_logger = logger;
 		}
