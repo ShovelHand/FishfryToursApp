@@ -15,6 +15,7 @@ using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using React.AspNet;
 using FishfryTours.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace FishfryTours
 {
@@ -38,7 +39,7 @@ namespace FishfryTours
 			services.AddControllersWithViews();
 			services.AddDbContext<DatabaseContext>(options =>
 			{
-				var sqlCOnnection = new SqlConnection(Configuration.GetConnectionString("DatabaseContext"));
+				options.UseSqlServer(Configuration.GetConnectionString("DatabaseContext"));
 			});
 		}
 
