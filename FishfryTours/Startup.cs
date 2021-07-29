@@ -14,6 +14,7 @@ using JavaScriptEngineSwitcher.V8;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using React.AspNet;
 using FishfryTours.Models;
+using Microsoft.Data.SqlClient;
 
 namespace FishfryTours
 {
@@ -35,7 +36,10 @@ namespace FishfryTours
 			// Make sure a JS engine is registered, or you will get an error!
 			services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName).AddV8();
 			services.AddControllersWithViews();
-		//	services.AddDbContext<DatabaseContext>(options =>options.UseSqlite("Data Source=localdatabase.db"));
+			services.AddDbContext<DatabaseContext>(options =>
+			{
+				var sqlCOnnection = new SqlConnection(Configuration.GetConnectionString("DatabaseContext"));
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
