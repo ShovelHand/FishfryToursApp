@@ -20,9 +20,16 @@ namespace FishfryTours.Controllers
 		[HttpGet]
 		public string Boats()
 		{
-			var boats = _context.Boats;
-			return boats.First().Name;
+			try
+			{
 
+				var boats = _context.Boats;
+				return boats.First().Name;
+			}
+			catch(Exception e)
+			{
+				return e.Message;
+			}
 		}
 		
 		[HttpGet]

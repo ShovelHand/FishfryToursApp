@@ -82,8 +82,6 @@ C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\bin\Release
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\bin\Release\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\bin\Release\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\bin\Release\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
-C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Release\netcoreapp3.1\FishfryTours.Migrations.AddProperty.resources
-C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Release\netcoreapp3.1\FishfryTours.csproj.GenerateResource.cache
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Release\netcoreapp3.1\FishfryTours.AssemblyInfoInputs.cache
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Release\netcoreapp3.1\FishfryTours.AssemblyInfo.cs
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Release\netcoreapp3.1\FishfryTours.csproj.CoreCompileInputs.cache

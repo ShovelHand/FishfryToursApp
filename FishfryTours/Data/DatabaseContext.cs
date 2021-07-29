@@ -25,9 +25,12 @@ namespace FishfryTours.Models
 			set; 
 		}
 
+		public DbSet<Guide> Guides { get; set; }
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<Boat>().HasNoKey();
+			modelBuilder.Entity<Guide>().HasNoKey();
 		}
 
 	}

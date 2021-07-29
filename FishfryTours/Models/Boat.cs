@@ -8,7 +8,7 @@ namespace FishfryTours.Models
 {
 	public class Boat
 	{
-		public int Id { get; }
+		public int Id { get; set; }
 		public string Name { get; set; }
 		public string Status { get; set; }
 
