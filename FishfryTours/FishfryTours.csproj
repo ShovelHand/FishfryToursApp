@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>FishfryTours</AssemblyName>
     <RootNamespace>FishfryTours</RootNamespace>
+    <UserSecretsId>271220fa-375b-4bc4-a692-208026468a32</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
