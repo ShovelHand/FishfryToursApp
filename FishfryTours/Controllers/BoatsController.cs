@@ -35,7 +35,6 @@ namespace FishfryTours.Controllers
 		{
 			try
 			{
-
 				var boats = _context.Boats;
 				string boatJson = JsonSerializer.Serialize(boats);
 				return boatJson;
@@ -71,10 +70,47 @@ namespace FishfryTours.Controllers
 
 		//Destroy boat entity in DB
 		[HttpPost]
-		public IActionResult DeleteBoat(int id)
+		public async Task<IActionResult> DeleteBoat(int id)
 		{
+			try
+			{
+				Boat boat = _context.Boats.Find(id);
+				if(ModelState.IsValid && boat != null)
+				{
+					_context.Remove(boat);
+					await _context.SaveChangesAsync();
+				}
+				return Ok();
+			}
+			catch(Exception e)
+			{
+				return BadRequest(e.Message);
+			}
 			
-			return Ok();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> UpdateBoat(int id, string status = "")
+		{
+			try
+			{
+				Boat boat = _context.Boats.Find(id);
+				if (ModelState.IsValid && boat != null)
+				{
+					if (!string.IsNullOrEmpty(status))
+						boat.Status = status;
+					_context.Update(boat);
+					await _context.SaveChangesAsync();
+					return Ok();
+				}
+				else
+					throw new Exception($"No boat found, or modelstate invalid for action UpdateBoat. Boat id {id}");
+			}
+			catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+
 		}
 
 		//Create new guide entity in DB
@@ -100,10 +136,44 @@ namespace FishfryTours.Controllers
 
 		//update Guide info in DB (phone, email, etc.)
 		[HttpPost]
-		public IActionResult UpdateGuide(int id)
+		public IActionResult UpdateGuide(int id, int assignedBoatId) // not yet sure if we'll track boat to guide, or guide to boat
 		{
+			try
+			{
+				Guide guide = _context.Guides.Find(id);
+				if(ModelState.IsValid && guide != null)
+				{
+				
+					return Ok();
+				}
+				else
+					throw new Exception($"No guide found, or modelstate invalid for action UpdateGuide. Guide id {id}");
+			}
+			catch(Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+		}
 
-			return Ok();
+		//Destroy boat entity in DB
+		[HttpPost]
+		public async Task<IActionResult> DeleteGuide(int id)
+		{
+			try
+			{
+				Guide guide = _context.Guides.Find(id);
+				if (ModelState.IsValid && guide != null)
+				{
+					_context.Remove(guide);
+					await _context.SaveChangesAsync();
+				}
+				return Ok();
+			}
+			catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+
 		}
 
 

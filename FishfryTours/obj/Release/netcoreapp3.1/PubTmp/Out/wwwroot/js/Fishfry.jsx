@@ -1,64 +1,58 @@
-﻿const data = [
-    { id: 1, author: 'Daniel Lo Nigro', text: 'Hello ReactJS.NET World!' },
-    { id: 2, author: 'Pete Hunt', text: 'This is one comment' },
-    { id: 3, author: 'Jordan Walke', text: 'This is *another* comment' },
-];
-
-class CommentList extends React.Component {
+﻿
+class MainContent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { data: [] };
+    }
+    componentWillMount() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('get', this.props.url, true);
+        xhr.onload = () => {
+            const data = JSON.parse(xhr.responseText);
+            console.log(data);
+            this.setState({ data: data });
+        };
+        xhr.send();
+    }
     render() {
-        const commentNodes = this.props.data.map(comment => (
-            <Comment author={comment.author} key={comment.id}>
-                {comment.text}
-            </Comment>
+        return (
+            <div className="mainContent">
+                <h1>Fishfry Tours</h1>
+                <BoatList data={this.state.data}/>
+            </div>
+        );
+    }
+}
+
+class BoatList extends React.Component {
+    render() {
+        const boatNodes = this.props.data.map(boat => (
+            <Boat name={boat.Name} key={boat.Id}>
+                {boat.boatName}
+            </Boat>
         ));
-        return <div className="commentList">{commentNodes}</div>;
+        return <div className="boatList">{boatNodes}</div>;
+        //return (
+        //    <div className="commentList">
+        //        <h2>Boats in the Fishfry Tours fleet</h2>
+        //        <Boat name="Daniel Lo Nigro">
+                    
+        //        </Boat>
+        //    </div>
+        //);
     }
+
 }
 
-class CommentForm extends React.Component {
+class Boat extends React.Component {
     render() {
         return (
-            <div className="commentForm">Hello, world! I am a CommentForm.</div>
-        );
-    }
-}
-class CommentBox extends React.Component {
-    render() {
-        return (
-            <div className="commentBox">
-                <h1>Comments</h1>
-                <CommentList data={this.props.data} />
-                <CommentForm />
+            <div className="boat">
+                <h3 className="boatName">{this.props.name}</h3>
+                {this.props.children}
             </div>
         );
     }
 }
 
-function createRemarkable() {
-    var remarkable =
-        'undefined' != typeof global && global.Remarkable
-            ? global.Remarkable
-            : window.Remarkable;
-
-    return new remarkable();
-}
-
-
-class Comment extends React.Component {
-    rawMarkup() {
-        const md = new Remarkable();
-        const rawMarkup = md.render(this.props.children.toString());
-        return { __html: rawMarkup };
-    }
-    render() {
-        return (
-            <div className="comment">
-                <h2 className="commentAuthor">{this.props.author}</h2>
-                <span dangerouslySetInnerHTML={this.rawMarkup()} />
-            </div>
-        );
-    }
-}
-
-ReactDOM.render(<CommentBox data={data} />, document.getElementById('content'));
-//ReactDOM.render(<CommentBox />, document.getElementById('content'));
+ReactDOM.render(<MainContent url="/GetBoats"/>, document.getElementById('content'));
