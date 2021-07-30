@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,10 +8,10 @@ namespace FishfryTours.Models
 {
     public class Guide
     {
-        int Id { get; set; }
-        string Name { get; set; }
-        string Phone { get; set; }
-        string Email { get; set; }
-        string EmergencyContact { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public string EmergencyContact { get; set; }
     }
 }

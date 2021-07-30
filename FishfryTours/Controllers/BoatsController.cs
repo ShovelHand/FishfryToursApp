@@ -4,7 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using System.Net.Http;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Text.Json;
 
 namespace FishfryTours.Controllers
 {
@@ -26,13 +29,13 @@ namespace FishfryTours.Controllers
 
 		//Get all boat entities in DB
 		[HttpGet]
-		public string Boats() 
+		public string GetBoats() 
 		{
 			try
 			{
 
 				var boats = _context.Boats;
-				return boats.First().Name;
+				return JsonSerializer.Serialize(boats);
 			}
 			catch(Exception e)
 			{
@@ -43,26 +46,52 @@ namespace FishfryTours.Controllers
 		
 		//Create new boat entity in DB
 		[HttpPost]
-		public IActionResult CreateBoat()
-		{
-
-			return Ok();
+		public async Task<IActionResult> CreateBoat([Bind("Id,Name,Status")] Boat boat)
+		{ 
+			try
+			{
+				if (ModelState.IsValid)
+				{
+					_context.Add(boat);
+					await _context.SaveChangesAsync();	
+					return Ok();
+				}
+				else
+					throw new Exception("Model state was not valid adding boat to database");
+			}
+			catch(Exception e)
+			{
+				return BadRequest(e.Message);
+			}
 		}
 
 		//Destroy boat entity in DB
 		[HttpPost]
 		public IActionResult DeleteBoat(int id)
 		{
-
+			
 			return Ok();
 		}
 
 		//Create new guide entity in DB
 		[HttpPost]
-		public IActionResult CreateGuide()
+		public async Task<IActionResult> CreateGuide([Bind("Id,Name,Phone,Email,EmergencyContact")] Guide guide)
 		{
-
-			return Ok();
+			try
+			{
+				if (ModelState.IsValid)
+				{
+					_context.Add(guide);
+					await _context.SaveChangesAsync();
+					return Ok();
+				}
+				else
+					throw new Exception("Model state was not valid adding guide to database");
+			}
+			catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
 		}
 
 		//update Guide info in DB (phone, email, etc.)

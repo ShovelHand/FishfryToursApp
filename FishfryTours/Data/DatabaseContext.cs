@@ -29,8 +29,18 @@ namespace FishfryTours.Models
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<Boat>().HasNoKey();
-			modelBuilder.Entity<Guide>().HasNoKey();
+			//	modelBuilder.Entity<Boat>().HasNoKey();
+			//	modelBuilder.Entity<Guide>().HasNoKey();
+			modelBuilder.Entity<Boat>(entity =>
+			{
+				entity.HasKey(e => e.Id);
+				//	entity.ToTable("Boats");
+				// … 
+			});
+			modelBuilder.Entity<Guide>(entity =>
+			{
+				entity.HasKey(e => e.Id);
+			});
 		}
 
 	}
