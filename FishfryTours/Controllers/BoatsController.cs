@@ -8,6 +8,7 @@ using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace FishfryTours.Controllers
 {
@@ -111,5 +112,11 @@ namespace FishfryTours.Controllers
 			return Ok();
 		}
 
+
+		public async Task<IActionResult> Boats()
+		{
+
+			return View(await _context.Boats.ToListAsync());
+		}
 	}
 }
