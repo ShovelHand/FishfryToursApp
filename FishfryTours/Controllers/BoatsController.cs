@@ -29,6 +29,7 @@ namespace FishfryTours.Controllers
 		}
 
 		//Get all boat entities in DB
+		[Route("GetBoats")]
 		[HttpGet]
 		public string GetBoats() 
 		{
@@ -36,7 +37,9 @@ namespace FishfryTours.Controllers
 			{
 
 				var boats = _context.Boats;
-				return JsonSerializer.Serialize(boats);
+				string boatJson = JsonSerializer.Serialize(boats);
+				return boatJson;
+
 			}
 			catch(Exception e)
 			{

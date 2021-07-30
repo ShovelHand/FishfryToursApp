@@ -1,15 +1,24 @@
-﻿const data = [
-    { id: 1, boatName: 'Daniel Lo Nigro' },
-    { id: 2, boatName: 'Pete Hunt' },
-    { id: 3, boatName: 'Jordan Walke' },
-];
-
+﻿
 class MainContent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { data: [] };
+    }
+    componentWillMount() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('get', this.props.url, true);
+        xhr.onload = () => {
+            const data = JSON.parse(xhr.responseText);
+            console.log(data);
+            this.setState({ data: data });
+        };
+        xhr.send();
+    }
     render() {
         return (
             <div className="mainContent">
                 <h1>Fishfry Tours</h1>
-                <BoatList data={this.props.data}/>
+                <BoatList data={this.state.data}/>
             </div>
         );
     }
@@ -18,7 +27,7 @@ class MainContent extends React.Component {
 class BoatList extends React.Component {
     render() {
         const boatNodes = this.props.data.map(boat => (
-            <Boat name={boat.boatName} key={boat.id}>
+            <Boat name={boat.Name} key={boat.Id}>
                 {boat.boatName}
             </Boat>
         ));
@@ -46,4 +55,4 @@ class Boat extends React.Component {
     }
 }
 
-ReactDOM.render(<MainContent data={data}/>, document.getElementById('content'));
+ReactDOM.render(<MainContent url="/GetBoats"/>, document.getElementById('content'));
