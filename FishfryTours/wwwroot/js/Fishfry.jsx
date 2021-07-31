@@ -18,7 +18,6 @@ class MainContent extends React.Component {
         xhr.open('get', this.props.url, true);
         xhr.onload = () => {
             const data = JSON.parse(xhr.responseText);
-            console.log(data);
             this.setState({ data: data });
         };
         xhr.send();
@@ -84,25 +83,56 @@ class KanbanBoard extends React.Component {
     }
 }
 
+/* const request: XMLHttpRequest = new XMLHttpRequest();
+    request.onerror = (): void => {
+        console.error('an error occurred trying to get custom settings for CE description: ' + request.responseText);
+    };
+    request.onreadystatechange = (): void => {
+        if (request.readyState === 4) {
+            switch (request.status) {
+                case 200:
+                    CEcategoryString = request.responseText.replace(/"/g, "");
+                    break;
+                case 400:
+                    console.error("Error: " + request.status + ' text: ' + request.responseText);
+                    break;
+            }
+        }
+    };
+    request.open('GET', url);
+    request.responseType = "text";
+    request.setRequestHeader('X-CITYVIEW-CALLERID', 'outlookWebAddIn');
+    request.send();
+    */
+
 updateBoatStatus = (id, status) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', "UpdateBoat?id=" + id + "&status=" + status, true);
-    xhr.onload = () => {
-        const data = JSON.parse(xhr.responseText);
-        console.log(data);
-        this.setState({ data: data });
-    }
-    xhr.onerror = () => {
-        console.error("an error occurred");
-    }
-    xhr.send();
+    
+        const xhr = new XMLHttpRequest();
+        xhr.open('post', "UpdateBoat?id=" + id + "&status=" + status, true);
+        xhr.onreadystatechange = () => {
+            switch (xhr.status) {
+                case 200:
+
+                    // handle success, like stop a loading spinner, give feedbak toast
+                    break;
+                case 400:
+                    console.error("an error occurred");
+                    break;
+            }
+
+        }
+
+        xhr.send();
+    
 }
 
 
 class Lane extends React.Component {
     onDrop = (e, status) => {
         let id = e.dataTransfer.getData("id");
-        updateBoatStatus(id, status);
+ 
+            updateBoatStatus(id, status);
+        
     };
 
     onDragOver = e => {
