@@ -95,4 +95,17 @@ body {
 .swimlaneHeader{
     font-size: 1.2em;
     font-weight: 500;
+    width: 100%;
+    background-color: cadetblue;
+    margin-bottom: 16px;
+}
+
+.boat{
+    background-color: aqua;
+    border-radius: 30px;
+    width: 96%;
+    margin-left: 2%;
+    margin-bottom: 8px;
+    font-size: 1.2em;
+    font-weight: 500;
 }

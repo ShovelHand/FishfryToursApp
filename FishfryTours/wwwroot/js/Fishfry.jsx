@@ -13,7 +13,8 @@ class MainContent extends React.Component {
         this.state = { data: [] };
         isClicked: false
     }
-    componentWillMount() {
+    loadBoatsFromServer() {
+        console.log("boats loading");
         const xhr = new XMLHttpRequest();
         xhr.open('get', this.props.url, true);
         xhr.onload = () => {
@@ -21,6 +22,9 @@ class MainContent extends React.Component {
             this.setState({ data: data });
         };
         xhr.send();
+    }
+    componentWillMount() {
+        this.loadBoatsFromServer();
     }
 
     handleAddNew = () => {
@@ -32,14 +36,14 @@ class MainContent extends React.Component {
   //      this.setState({ isClicked: obj });
     };
 
-    handleNewTask = content => {
-        //const task = {};
-        //task.name = content;
-        //task.bgColor = "#9fa8da";
-        //task.category = "wip";
-        //const tasks = [...this.state.tasks, task];
-        //this.setState({ tasks });
-    };
+    //handleNewBoat = content => {
+    //    const boat = {};
+    //    boat.Id = this.state.data.length + 1;
+    //    boatName = content;
+    //    boat.Status = "docked";
+    //    const boats = [...this.state.data, data];
+    //    this.setState({ tass });
+    //};
 
     render() {
         //status swim lanes for boats     
@@ -111,12 +115,17 @@ class Lane extends React.Component {
         let boats = this.props.data.filter(boat => {
             if (boat.id == id) {
                 boat.Status = status;
-               
             }
+            
+
+                statusLanes[status].push(boat);
+           // this.setState({ data: data });
             return boat;
         });
-        this.setState({ ...this.props.data, boats });
+            
+                console.log(statusLanes);
             updateBoatStatus(id, status);
+
         
     };
 
@@ -137,15 +146,10 @@ class DockedLane extends Lane {
         ));
         return (
             <div className="dockedLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "indock")}>
-                <span className="swimlaneHeader">Docked</span>
+                <div className="swimlaneHeader">Docked</div>
                  
                 <span>
-                    <a className="btn-floating btn">
-                        <i className="material-icons" onClick={this.handleAddNew}>
-                            add
-                      </i>
-                      
-                    </a>
+                    
                     { boatNodes}
                 </span>
             </div>
@@ -154,7 +158,9 @@ class DockedLane extends Lane {
 }
 
 class OutboundLane extends Lane {
-   
+    componentDidUpdate() {
+        console.log("updated");
+    }
     render() {
         const boatNodes = this.props.data.map(boat => (
             <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status} >
@@ -163,7 +169,7 @@ class OutboundLane extends Lane {
         ));
         return (
             <div className="outboundLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "outbound")}>
-                <span className="swimlaneHeader">Outbound</span>
+                <div className="swimlaneHeader">Outbound</div>
                 { boatNodes}
             </div>
         );
@@ -178,7 +184,7 @@ class InboundLane extends Lane {
         ));
         return (
             <div className="inboundLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "inbound")}>
-                <span className="swimlaneHeader">Inbound</span>
+                <div className="swimlaneHeader">Inbound</div>
                 { boatNodes}
             </div>
         );
@@ -193,7 +199,7 @@ class MaintenanceLane extends Lane {
         ));
         return (
             <div className="maintenanceLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "maintenance")}>
-                <span className="swimlaneHeader">Maintenance</span>
+                <div className="swimlaneHeader">Maintenance</div>
                 { boatNodes}
             </div>
         );
@@ -216,8 +222,8 @@ class Boat extends React.Component {
        
         return (
  
-            <div className="boat" onDragStart={e => this.onDragStart(e, this.props.id)} draggable className="draggable" style={{ background: this.bgColor }}>
-                <h3 className="boatName">{this.props.name}</h3>
+            <div draggable className="boat" onDragStart={e => this.onDragStart(e, this.props.id)}  style={{ background: this.bgColor }}>
+                <span className="boatName">{this.props.name}</span>
                 {this.props.children}
             </div>
         );
