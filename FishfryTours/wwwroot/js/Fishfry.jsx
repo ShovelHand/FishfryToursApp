@@ -59,15 +59,17 @@ class MainContent extends React.Component {
 
     onDrop = (e, status) => {
         let id = e.dataTransfer.getData("id");
-        let tasks = this.state.data.filter(datum => {
-            if (datum.Id == id) {
-                datum.Status = status;
+        let boats = this.state.data.filter(boat => {
+            if (boat.Id == id) {
+                if(boat.Status != status)
+                    boat.Status = status;
+                this.updateBoatStatus(boat.Id, status);
                
             }
-            return datum;
+            return boat;
         });
 
-        this.setState({ ...this.state.data, tasks });
+        this.setState({ ...this.state.data, boats });
     };
 
     handleAddNew = () => {
@@ -178,10 +180,7 @@ class KanbanBoard extends React.Component {
         //console.log(statusLanes);
         return (
             <div className="kanbanBoard">
-                <DockedLane data={statusLanes["docked"]} />
-                <OutboundLane data={statusLanes["outbound"]} />
-                <InboundLane data={statusLanes["inbound"]} />
-                <MaintenanceLane data={statusLanes["maintenance"]} />
+             
             </div>
         );
     }
