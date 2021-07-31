@@ -87,8 +87,12 @@ class KanbanBoard extends React.Component {
     }
 }
 
-updateBoatStatus = (id, status) => {
-    
+
+
+
+class Lane extends React.Component {
+    updateBoatStatus = (id, status) => {
+
         const xhr = new XMLHttpRequest();
         xhr.open('post', "UpdateBoat?id=" + id + "&status=" + status, true);
         xhr.onreadystatechange = () => {
@@ -105,11 +109,8 @@ updateBoatStatus = (id, status) => {
         }
 
         xhr.send();
-    
-}
 
-
-class Lane extends React.Component {
+    }
     onDrop = (e, status) => {
         let id = e.dataTransfer.getData("id");
         let boats = this.props.data.filter(boat => {
@@ -124,7 +125,7 @@ class Lane extends React.Component {
         });
             
                 console.log(statusLanes);
-            updateBoatStatus(id, status);
+            this.updateBoatStatus(id, status);
 
         
     };
