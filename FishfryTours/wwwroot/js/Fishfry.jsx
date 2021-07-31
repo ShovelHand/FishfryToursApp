@@ -83,28 +83,6 @@ class KanbanBoard extends React.Component {
     }
 }
 
-/* const request: XMLHttpRequest = new XMLHttpRequest();
-    request.onerror = (): void => {
-        console.error('an error occurred trying to get custom settings for CE description: ' + request.responseText);
-    };
-    request.onreadystatechange = (): void => {
-        if (request.readyState === 4) {
-            switch (request.status) {
-                case 200:
-                    CEcategoryString = request.responseText.replace(/"/g, "");
-                    break;
-                case 400:
-                    console.error("Error: " + request.status + ' text: ' + request.responseText);
-                    break;
-            }
-        }
-    };
-    request.open('GET', url);
-    request.responseType = "text";
-    request.setRequestHeader('X-CITYVIEW-CALLERID', 'outlookWebAddIn');
-    request.send();
-    */
-
 updateBoatStatus = (id, status) => {
     
         const xhr = new XMLHttpRequest();
@@ -130,7 +108,14 @@ updateBoatStatus = (id, status) => {
 class Lane extends React.Component {
     onDrop = (e, status) => {
         let id = e.dataTransfer.getData("id");
- 
+        let boats = this.props.data.filter(boat => {
+            if (boat.id == id) {
+                boat.Status = status;
+               
+            }
+            return boat;
+        });
+        this.setState({ ...this.props.data, boats });
             updateBoatStatus(id, status);
         
     };
