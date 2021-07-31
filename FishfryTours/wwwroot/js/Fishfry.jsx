@@ -1,5 +1,4 @@
 ﻿
-
 const statusLanes = {
     docked: [],
     outbound: [],
@@ -13,6 +12,29 @@ class MainContent extends React.Component {
         this.state = { data: [] };
         isClicked: false
     }
+
+    
+    updateBoatStatus = (id, status) => {
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('post', "UpdateBoat?id=" + id + "&status=" + status, true);
+        xhr.onreadystatechange = () => {
+            switch (xhr.status) {
+                case 200:
+
+                    // handle success, like stop a loading spinner, give feedbak toast
+                    break;
+                case 400:
+                    console.error("an error occurred");
+                    break;
+            }
+
+        }
+
+        xhr.send();
+
+    }
+
     loadBoatsFromServer() {
         console.log("boats loading");
         const xhr = new XMLHttpRequest();
@@ -26,62 +48,140 @@ class MainContent extends React.Component {
     componentWillMount() {
         this.loadBoatsFromServer();
     }
+    onDragOver = e => {
+        e.preventDefault();
+    };
+
+    onDragStart = (e, id) => {
+        console.log("dragStart. Id: " + id);
+        e.dataTransfer.setData("id", id);
+    };
+
+    onDrop = (e, status) => {
+        let id = e.dataTransfer.getData("id");
+        let tasks = this.state.data.filter(datum => {
+            if (datum.Id == id) {
+                datum.Status = status;
+               
+            }
+            return datum;
+        });
+
+        this.setState({ ...this.state.data, tasks });
+    };
 
     handleAddNew = () => {
         let val = this.state.isClicked ? false : true;
-  //      this.setState({ isClicked: val });
+        this.setState({ isClicked: val });
     };
 
     handleClose = obj => {
-  //      this.setState({ isClicked: obj });
+        this.setState({ isClicked: obj });
     };
 
-    //handleNewBoat = content => {
-    //    const boat = {};
-    //    boat.Id = this.state.data.length + 1;
-    //    boatName = content;
-    //    boat.Status = "docked";
-    //    const boats = [...this.state.data, data];
-    //    this.setState({ tass });
-    //};
+    handleNewTask = content => {
+        const task = {};
+        task.name = content;
+        task.bgColor = "#9fa8da";
+        task.category = "wip";
+        const tasks = [...this.state.data, task];
+        this.setState({ tasks });
+    };
 
     render() {
-        //status swim lanes for boats     
-        //assign boats to swim lanes based on satus
-      
- 
+        const statusLanes = {
+            docked: [],
+            outbound: [],
+            inbound: [],
+            maintenance: [],
+        };
+
+        this.state.data.forEach(t => {
+            if (statusLanes[t.Status])
+                statusLanes[t.Status].push(
+                    <div className = "boat"
+                        key={t.Id}
+                        onDragStart={e => this.onDragStart(e, t.Id)}
+                        draggable
+                    >
+                        {t.Name}
+                    </div>
+                );
+            else
+                console.warn("a boat is not shown as it has an invalid status type. Name: " + t.Name + " Status: " + t.Status);
+        });
+        const loader = this.state.isClicked ? (
+            <NewTask
+                handleNewTask={this.handleNewTask}
+                handleClose={this.handleClose}
+            />
+        ) : null;
         return (
-
-            /* main content here */
-            <div className="mainContent">
-                <h1>Fishfry Tours</h1>
-
-                <p className="header">Drag & drop boats between swimlanes to set their status</p>
-
-                <KanbanBoard data={this.state.data}/>
+            <div className="kanbanBoard">
+                {loader}
                
+              
+                <div
+                    className="dockedLane"
+                    onDragOver={e => this.onDragOver(e)}
+                    onDrop={e => this.onDrop(e, "docked")}
+                >
+                    <span className="task-header">In Dock</span>
+                    {statusLanes.docked}
+                    <span>
+                        <a className="btn-floating btn">
+                            <i className="material-icons" onClick={this.handleAddNew}>
+                                add
+              </i>
+                        </a>
+                    </span>
+                </div>
+
+                <div
+                    className="outboundLane"
+                    onDragOver={e => this.onDragOver(e)}
+                    onDrop={e => this.onDrop(e, "outbound")}
+                >
+                    <span className="task-header">Outbound</span>
+                    {statusLanes.outbound}
+                </div>
+                <div
+                    className="inboundLane"
+                    onDragOver={e => this.onDragOver(e)}
+                    onDrop={e => this.onDrop(e, "inbound")}
+                >
+                    <span className="task-header">Inbound</span>
+                    {statusLanes.inbound}
+                </div>
+                <div
+                    className="maintenanceLane"
+                    onDragOver={e => this.onDragOver(e)}
+                    onDrop={e => this.onDrop(e, "maintenance")}
+                >
+                    <span className="task-header">Maintenance</span>
+                    {statusLanes.maintenance}
+                    </div>
+                    
             </div>
-
-      
-
         );
     }
 }
+
 class KanbanBoard extends React.Component {
     render() {
-        this.props.data.forEach(t => {
-            if (statusLanes[t.Status])
-                statusLanes[t.Status].push(t);
-            else
-                statusLanes["docked"].push(t);
-        });
-        console.log(statusLanes);
+        //this.props.data.forEach(t => {
+        //    if (statusLanes[t.Status])
+        //        statusLanes[t.Status].push(t);
+        //    else
+        //        statusLanes["docked"].push(t);
+        //});
+        //console.log(statusLanes);
         return (
             <div className="kanbanBoard">
                 <DockedLane data={statusLanes["docked"]} />
-                <OutboundLane data={statusLanes["outbound"]}/>
-                <InboundLane data={statusLanes["inbound"]}/>
-                <MaintenanceLane data={statusLanes["maintenance"]}/>
+                <OutboundLane data={statusLanes["outbound"]} />
+                <InboundLane data={statusLanes["inbound"]} />
+                <MaintenanceLane data={statusLanes["maintenance"]} />
             </div>
         );
     }
@@ -117,41 +217,43 @@ class Lane extends React.Component {
             if (boat.id == id) {
                 boat.Status = status;
             }
-            
 
-                statusLanes[status].push(boat);
-           // this.setState({ data: data });
+
+            statusLanes[status].push(boat);
+            // this.setState({ data: data });
             return boat;
         });
-            
-                console.log(statusLanes);
-            this.updateBoatStatus(id, status);
 
-        
+        console.log(statusLanes);
+        this.updateBoatStatus(id, status);
+
+
     };
 
     onDragOver = e => {
         e.preventDefault();
     };
     render() {
-        
+
     }
 }
 
 class DockedLane extends Lane {
     render() {
-        const boatNodes = this.props.data.map(boat => (
-            <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status} >
-                {boat.boatName}
-            </Boat>
-        ));
+        //const boatNodes = this.props.data.map(boat => (
+        //    <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status} >
+        //        {boat.boatName}
+        //    </Boat>
+        //));
         return (
-            <div className="dockedLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "indock")}>
+            <div className="dockedLane"
+            /*onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "indock")}*/
+            >
                 <div className="swimlaneHeader">Docked</div>
-                 
+
                 <span>
-                    
-                    { boatNodes}
+
+                //   {boatNodes}
                 </span>
             </div>
         );
@@ -159,49 +261,49 @@ class DockedLane extends Lane {
 }
 
 class OutboundLane extends Lane {
-    componentDidUpdate() {
-        console.log("updated");
-    }
+   
     render() {
-        const boatNodes = this.props.data.map(boat => (
-            <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status} >
-                {boat.boatName}
-            </Boat>
-        ));
+        //const boatNodes = this.props.data.map(boat => (
+        //    <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status} >
+        //        {boat.boatName}
+        //    </Boat>
+        //));
         return (
-            <div className="outboundLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "outbound")}>
+            <div className="outboundLane"
+            /*onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "outbound")}*/
+            >
                 <div className="swimlaneHeader">Outbound</div>
-                { boatNodes}
+             //   { boatNodes}
             </div>
         );
     }
 }
 class InboundLane extends Lane {
     render() {
-        const boatNodes = this.props.data.map(boat => (
-            <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status}>
-                {boat.boatName}
-            </Boat>
-        ));
+      
         return (
-            <div className="inboundLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "inbound")}>
+            <div className="inboundLane"
+                //onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "inbound")}
+            >
                 <div className="swimlaneHeader">Inbound</div>
-                { boatNodes}
+             //   { boatNodes}
             </div>
         );
     }
 }
 class MaintenanceLane extends Lane {
     render() {
-        const boatNodes = this.props.data.map(boat => (
-            <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status}>
-                {boat.boatName}
-            </Boat>
-        ));
+        //const boatNodes = this.props.data.map(boat => (
+        //    <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status}>
+        //        {boat.boatName}
+        //    </Boat>
+        //));
         return (
-            <div className="maintenanceLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "maintenance")}>
+            <div className="maintenanceLane"
+            //onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "maintenance")}
+            >
                 <div className="swimlaneHeader">Maintenance</div>
-                { boatNodes}
+          //      { boatNodes}
             </div>
         );
     }
@@ -217,13 +319,9 @@ class Boat extends React.Component {
         e.preventDefault();
     };
     render() {
-        console.log(this.props.name);
-        console.log(this.props.id);
-        console.log(this.props.status);
-       
         return (
- 
-            <div draggable className="boat" onDragStart={e => this.onDragStart(e, this.props.id)}  style={{ background: this.bgColor }}>
+
+            <div draggable className="boat" onDragStart={e => this.onDragStart(e, this.props.id)} style={{ background: this.bgColor }}>
                 <span className="boatName">{this.props.name}</span>
                 {this.props.children}
             </div>
@@ -231,4 +329,4 @@ class Boat extends React.Component {
     }
 }
 
-ReactDOM.render(<MainContent url="/GetBoats"/>, document.getElementById('content'));
+ReactDOM.render(<MainContent url="/GetBoats" />, document.getElementById('content'));
