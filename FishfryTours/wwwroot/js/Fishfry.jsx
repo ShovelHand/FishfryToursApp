@@ -84,15 +84,27 @@ class KanbanBoard extends React.Component {
     }
 }
 
+updateBoatStatus = (id, status) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('post', "UpdateBoat?id=" + id + "&status=" + status, true);
+    xhr.onload = () => {
+        const data = JSON.parse(xhr.responseText);
+        console.log(data);
+        this.setState({ data: data });
+    }
+    xhr.onerror = () => {
+        console.error("an error occurred");
+    }
+    xhr.send();
+}
+
 
 class Lane extends React.Component {
     onDrop = (e, status) => {
         let id = e.dataTransfer.getData("id");
+        updateBoatStatus(id, status);
+    };
 
-        console.log(status);
-        };
-
-        //    this.setState({ ...this.state.data, data });
     onDragOver = e => {
         e.preventDefault();
     };
@@ -104,7 +116,7 @@ class Lane extends React.Component {
 class DockedLane extends Lane {
     render() {
         const boatNodes = this.props.data.map(boat => (
-            <Boat name={boat.Name} key={boat.Id} >
+            <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status} >
                 {boat.boatName}
             </Boat>
         ));
@@ -126,69 +138,55 @@ class DockedLane extends Lane {
     }
 }
 
-class OutboundLane extends React.Component {
-    onDrop = (e, status) => {
-        let id = e.dataTransfer.getData("id");
-        let boats = this.state.data.filter(boat => {
-            if (boat.id == id) {
-                boat.category = status;
-                if (status == "indock") {
-                    boat.bgColor = "#e57373";
-                } else {
-                    boat.bgColor = "#9fa8da";
-                }
-            }
-            return boat;
-        });
-    }
-    onDragOver = e => {
-        e.preventDefault();
-    };
-    render() {
-        return (
-            <div className="outboundLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "outbound")}>
-                <span className="swimlaneHeader">Outbound</span>
-                {statusLanes.outbound}
-            </div>
-        );
-    }
-}
-class InboundLane extends React.Component {
-    render() {
-        return (
-            <div className="inboundLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "inbound")}>
-                <span className="swimlaneHeader">Inbound</span>
-                {statusLanes.inbound}
-            </div>
-        );
-    }
-}
-class MaintenanceLane extends React.Component {
-    render() {
-        return (
-            <div className="maintenanceLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "maintenance")}>
-                <span className="swimlaneHeader">Maintenance</span>
-                {statusLanes.maintenance}
-            </div>
-        );
-    }
-}
-
-class BoatList extends React.Component {
+class OutboundLane extends Lane {
+   
     render() {
         const boatNodes = this.props.data.map(boat => (
-            <Boat name={boat.Name} key={boat.Id}>
+            <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status} >
                 {boat.boatName}
             </Boat>
         ));
-        return <div className="boatList">{boatNodes}</div>;
+        return (
+            <div className="outboundLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "outbound")}>
+                <span className="swimlaneHeader">Outbound</span>
+                { boatNodes}
+            </div>
+        );
     }
-
+}
+class InboundLane extends Lane {
+    render() {
+        const boatNodes = this.props.data.map(boat => (
+            <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status}>
+                {boat.boatName}
+            </Boat>
+        ));
+        return (
+            <div className="inboundLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "inbound")}>
+                <span className="swimlaneHeader">Inbound</span>
+                { boatNodes}
+            </div>
+        );
+    }
+}
+class MaintenanceLane extends Lane {
+    render() {
+        const boatNodes = this.props.data.map(boat => (
+            <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status}>
+                {boat.boatName}
+            </Boat>
+        ));
+        return (
+            <div className="maintenanceLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "maintenance")}>
+                <span className="swimlaneHeader">Maintenance</span>
+                { boatNodes}
+            </div>
+        );
+    }
 }
 
 /*boat draggable card */
 class Boat extends React.Component {
-   
     onDragStart = (e, id) => {
         e.dataTransfer.setData("id", id);
         console.log(id);
@@ -197,8 +195,13 @@ class Boat extends React.Component {
         e.preventDefault();
     };
     render() {
+        console.log(this.props.name);
+        console.log(this.props.id);
+        console.log(this.props.status);
+       
         return (
-            <div className="boat" onDragStart={e => this.onDragStart(e, this.Name)} draggable className="draggable" style={{ background: this.bgColor }}>
+ 
+            <div className="boat" onDragStart={e => this.onDragStart(e, this.props.id)} draggable className="draggable" style={{ background: this.bgColor }}>
                 <h3 className="boatName">{this.props.name}</h3>
                 {this.props.children}
             </div>

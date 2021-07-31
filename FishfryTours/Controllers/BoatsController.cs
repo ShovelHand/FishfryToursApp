@@ -89,6 +89,7 @@ namespace FishfryTours.Controllers
 			
 		}
 
+		[Route("UpdateBoat")]
 		[HttpPost]
 		public async Task<IActionResult> UpdateBoat(int id, string status = "")
 		{
