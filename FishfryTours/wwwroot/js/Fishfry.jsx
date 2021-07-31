@@ -1,5 +1,12 @@
 ﻿
 
+const statusLanes = {
+    Docked: [],
+    outbound: [],
+    inbound: [],
+    maintenance: [],
+};
+
 class MainContent extends React.Component {
     constructor(props) {
         super(props);
@@ -64,12 +71,7 @@ class MainContent extends React.Component {
 
     render() {
         //status swim lanes for boats
-        const statusLanes = {
-            Docked: [],
-            outbound: [],
-            inbound: [],
-            maintenance: [],
-        };
+        
         //assign boats to swim lanes based on satus
         this.state.data.forEach(t => {
             console.log(t);
@@ -96,17 +98,7 @@ class MainContent extends React.Component {
 
                 <p className="header">Drag & Drop</p>
 
-                <div className="dockedLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "indock")}>
-                  <span className="task-header">Docked</span>
-                    {statusLanes.Docked}
-                  <span>
-                    <a className="btn-floating btn">
-                      <i className="material-icons" onClick={this.handleAddNew}>
-                                        add
-                      </i>
-                    </a>
-                  </span>
-                </div>
+                <DockedLane />
 
                 <div className="outboundLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "outbound")} >
                     <span className="task-header">Outbound</span>
@@ -127,6 +119,24 @@ class MainContent extends React.Component {
 
       
 
+        );
+    }
+}
+
+class DockedLane extends React.Component {
+    render() {
+        return (
+            <div className="dockedLane" onDragOver={e => this.onDragOver(e)} onDrop={e => this.onDrop(e, "indock")}>
+                <span className="task-header">Docked</span>
+                {statusLanes.Docked}
+                <span>
+                    <a className="btn-floating btn">
+                        <i className="material-icons" onClick={this.handleAddNew}>
+                            add
+                      </i>
+                    </a>
+                </span>
+            </div>
         );
     }
 }
