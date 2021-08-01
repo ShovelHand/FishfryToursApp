@@ -301,10 +301,10 @@ class MaintenanceLane extends Lane {
 class Boat extends React.Component {
     onDragStart = (e, id) => {
         e.dataTransfer.setData("id", id);
-        console.log(id);
     };
     onTouchStart = (e, id) => {
         e.dataTransfer.setData("id", id);
+        this.bgColor = "#e57373";
         console.log(id);
     };
 
