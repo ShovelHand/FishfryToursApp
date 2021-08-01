@@ -83,7 +83,7 @@ class MainContent extends React.Component {
         this.setState({ ...this.state.data, boats });
     };
 
-    handleAddNew = () => {
+    handleDelete = () => {
         let val = this.state.isClicked ? false : true;
         this.setState({ isClicked: val });
     };
@@ -111,7 +111,6 @@ class MainContent extends React.Component {
         document.getElementById("fname").value = "";
     };
 
-
     render() {
         const statusLanes = {
             docked: [],
@@ -135,16 +134,15 @@ class MainContent extends React.Component {
             else
                 console.warn("a boat is not shown as it has an invalid status type. Name: " + t.Name + " Status: " + t.Status);
         });
-        const loader = this.state.isClicked ? (
-            <NewBoat
-             //   handleNewBoat={this.handleNewBoat}
-            //    handleClose={this.handleClose}
-            />
-        ) : null;
+
         return (
             <div className="mainContent">
                 <h1>Fishfry Tours</h1>
-                <NewBoatPanel handleNewBoat={this.handleNewBoat} />
+                <h4>Fleet and Guide status</h4>
+                <div className="topUIElements">
+                    <NewBoatPanel handleNewBoat={this.handleNewBoat} />
+                    <DeleteDropArea handleDelete={this.handleDelete} isClicked={this.state.isClicked} />
+                </div>
                 <p className="header">Drag & drop boats between swimlanes to set their status</p>
 
                 <KanbanBoard data={this.state.data} statusLanes={statusLanes} onDragOver={this.onDragOver} onDragStart={this.onDragStart} onDrop={this.onDrop} onTouchStart={this.onTouchStart} />
@@ -171,6 +169,66 @@ class NewBoatPanel extends React.Component {
         );
     }
 }
+class DeleteDropArea extends React.Component {
+    constructor(props) {
+        super(props);
+      
+    }
+    onDrop = (e) => {
+        const id = e.dataTransfer.getData("id");
+        console.log("delete id: " + id);
+        this.props.handleDelete(id);
+
+    };
+
+    onDragOver = e => {
+        e.preventDefault();
+    };
+    render() {
+        const loader = this.props.isClicked ? (
+            <ConfirmDeleteDialog
+                //handleNewTask={this.handleNewTask}
+                //handleClose={this.handleClose}
+            />
+        ) : null;
+        return (
+           
+            <div className="deleteDropBox">
+                {loader}
+                <div id="deleteDropButton" 
+                    onDragOver={e => this.onDragOver(e)}
+                    onDrop={e => this.onDrop(e, "docked")}
+
+                > Delete </div>
+            </div>
+        );
+    }
+}
+
+class ConfirmDeleteDialog extends React.Component {
+    deleteEntity = (id) =>{
+        return;
+    }
+    cancelDelete = () => {
+
+    }
+    render(){
+        return (
+            <div className="popupOverlay">
+                <div className="container-popup">
+                    <div className="popupScreen">
+                        <h4>Really delete this entity?</h4>
+                        <p>This action is permanent, and cannot be undone</p>
+                        <div id="deleteConfirmButton" onClick={ deleteEntity } > Yes </div>
+                        <div id="deleteCancelButton" onClick={cancelDelete}> Cancel </div>
+                    </div>
+                </div>
+            </div>
+        
+        );
+    }
+}
+
 class NewBoat extends React.Component {
     constructor(props) {
         super(props);
@@ -386,22 +444,28 @@ class MaintenanceLane extends Lane {
 class Boat extends React.Component {
     onDragStart = (e, id) => {
         e.dataTransfer.setData("id", id);
+        var deleteButton = document.getElementById("deleteDropButton");
+        deleteButton.style.backgroundColor = "#e57373";
     };
-    onTouchStart = (e, id) => {
-        e.dataTransfer.setData("id", id);
-        this.bgColor = "#e57373";
-        console.log(id);
-    };
+    //onTouchStart = (e, id) => {
+    //    e.dataTransfer.setData("id", id);
+    //    console.log(id);
+    //};
 
     onDragOver = e => {
         e.preventDefault();
     };
+    onDragEnd = (e) => {
+        var deleteButton = document.getElementById("deleteDropButton");
+        deleteButton.style.backgroundColor = "blue";
+    }
     render() {
         return (
 
             <div draggable className="boat"
                 onDragStart={e => this.onDragStart(e, this.props.id)}
-                onTouchStart={e => this.onTouchStart(e, this.props.id)}
+                onDragEnd={e => this.onDragEnd(e)}
+             //   onTouchStart={e => this.onTouchStart(e, this.props.id)}
                 style={{ background: this.bgColor }}>
                 <span className="boatName">{this.props.name}</span>
                 {this.props.children}

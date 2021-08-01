@@ -115,15 +115,24 @@ body {
     border-style: solid;
     border-width: thin;
     padding: 5px;
+    display: inline-block;
 }
 
-#addButtonLabel{
+.deleteDropBox {
+    border-style: solid;
+    border-width: thin;
+    padding: 5px;
+    display: inline-block;
+    margin-left: 12%;
+}
+
+#addButtonLabel {
     margin-right: 4px;
 }
-#newBoatButton {
-    margin-left: 10%;
+#newBoatButton, #deleteDropButton, 
+#deleteConfirmButton, #deleteCancelButton {
     height: 36px;
-    width: 60px;
+    min-width: 60px;
     padding: 4px;
     background-color: blue;
     color: whitesmoke;
@@ -136,6 +145,34 @@ body {
     #newBoatButton:hover {
         background-color:blueviolet;
     }
+#deleteConfirmButton{
+    margin-right: 4px;
+}
+#deleteCancelButton{
+    margin-left: 4px;
+}
+.popupOverlay {
+    background-color: rgba(0,0,0,0.5);
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+}
+.container-popup {
+    width: 50%;
+    height: 12%;
+    position: absolute;
+    top: 30%;
+    right: 20%;
+    z-index: 100;
+    background-color: white;
+    padding: 10px;
+}
+.popupScreen {
+    text-align: center;
+}
 /*.btn {
     margin-top: 200px;
 }
