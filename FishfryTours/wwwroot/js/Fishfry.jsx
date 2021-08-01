@@ -1,11 +1,4 @@
 ﻿
-const statusLanes = {
-    docked: [],
-    outbound: [],
-    inbound: [],
-    maintenance: [],
-};
-
 class MainContent extends React.Component {
     constructor(props) {
         super(props);
@@ -119,14 +112,36 @@ class MainContent extends React.Component {
             />
         ) : null;
         return (
+            <div className="mainContent">
+                <h1>Fishfry Tours</h1>
+
+                <p className="header">Drag & drop boats between swimlanes to set their status</p>
+
+                <KanbanBoard statusLanes={statusLanes} onDragOver={this.onDragOver} onDragStart={this.onDragStart} onDrop={this.onDrop} />
+
+            </div>
+                
+
+        );
+    }
+}
+
+class KanbanBoard extends React.Component {
+    render() {
+        //this.props.data.forEach(t => {
+        //    if (statusLanes[t.Status])
+        //        statusLanes[t.Status].push(t);
+        //    else
+        //        statusLanes["docked"].push(t);
+        //});
+        //console.log(statusLanes);
+        const statusLanes = this.props.statusLanes;
+        return (
             <div className="kanbanBoard">
-                {loader}
-               
-              
                 <div
                     className="dockedLane"
-                    onDragOver={e => this.onDragOver(e)}
-                    onDrop={e => this.onDrop(e, "docked")}
+                    onDragOver={e => this.props.onDragOver(e)}
+                    onDrop={e => this.props.onDrop(e, "docked")}
                 >
                     <span className="task-header">In Dock</span>
                     {statusLanes.docked}
@@ -141,46 +156,29 @@ class MainContent extends React.Component {
 
                 <div
                     className="outboundLane"
-                    onDragOver={e => this.onDragOver(e)}
-                    onDrop={e => this.onDrop(e, "outbound")}
+                    onDragOver={e => this.props.onDragOver(e)}
+                    onDrop={e => this.props.onDrop(e, "outbound")}
                 >
                     <span className="task-header">Outbound</span>
                     {statusLanes.outbound}
                 </div>
                 <div
                     className="inboundLane"
-                    onDragOver={e => this.onDragOver(e)}
-                    onDrop={e => this.onDrop(e, "inbound")}
+                    onDragOver={e => this.props.onDragOver(e)}
+                    onDrop={e => this.props.onDrop(e, "inbound")}
                 >
                     <span className="task-header">Inbound</span>
                     {statusLanes.inbound}
                 </div>
                 <div
                     className="maintenanceLane"
-                    onDragOver={e => this.onDragOver(e)}
-                    onDrop={e => this.onDrop(e, "maintenance")}
+                    onDragOver={e => this.props.onDragOver(e)}
+                    onDrop={e => this.props.onDrop(e, "maintenance")}
                 >
                     <span className="task-header">Maintenance</span>
                     {statusLanes.maintenance}
-                    </div>
-                    
-            </div>
-        );
-    }
-}
+                </div>
 
-class KanbanBoard extends React.Component {
-    render() {
-        //this.props.data.forEach(t => {
-        //    if (statusLanes[t.Status])
-        //        statusLanes[t.Status].push(t);
-        //    else
-        //        statusLanes["docked"].push(t);
-        //});
-        //console.log(statusLanes);
-        return (
-            <div className="kanbanBoard">
-             
             </div>
         );
     }
