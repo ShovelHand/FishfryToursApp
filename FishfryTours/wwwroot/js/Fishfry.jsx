@@ -46,9 +46,12 @@ class MainContent extends React.Component {
     };
 
     onDragStart = (e, id) => {
-        console.log("dragStart. Id: " + id);
         e.dataTransfer.setData("id", id);
     };
+    onTouchStart = (e, id) => {
+        console.log("tocuhStart. Id: " + id);
+        e.dataTransfer.setData("id", id);
+    }
 
     onDrop = (e, status) => {
         let id = e.dataTransfer.getData("id");
@@ -94,9 +97,10 @@ class MainContent extends React.Component {
         this.state.data.forEach(t => {
             if (statusLanes[t.Status])
                 statusLanes[t.Status].push(
-                    <div className = "boat"
+                    <div className="boat"
                         key={t.Id}
                         onDragStart={e => this.onDragStart(e, t.Id)}
+                        onTouchStart={e => this.onTouchStart(e, t.Id)}
                         draggable
                     >
                         {t.Name}
@@ -117,7 +121,7 @@ class MainContent extends React.Component {
 
                 <p className="header">Drag & drop boats between swimlanes to set their status</p>
 
-                <KanbanBoard data={this.state.data} statusLanes={statusLanes} onDragOver={this.onDragOver} onDragStart={this.onDragStart} onDrop={this.onDrop} />
+                <KanbanBoard data={this.state.data} statusLanes={statusLanes} onDragOver={this.onDragOver} onDragStart={this.onDragStart} onDrop={this.onDrop} onTouchStart={this.onTouchStart} />
 
             </div>
                 
@@ -136,6 +140,7 @@ class KanbanBoard extends React.Component {
                     onDragOver={this.props.onDragOver}
                     onDragStart={this.props.onDragStart}
                     onDrop={this.props.onDrop}
+                    onTouchStart={this.props.onTouchStart}
                     boats={this.props.data.filter(t => t.Status == "docked")} />
 
                 <OutboundLane
@@ -298,13 +303,21 @@ class Boat extends React.Component {
         e.dataTransfer.setData("id", id);
         console.log(id);
     };
+    onTouchStart = (e, id) => {
+        e.dataTransfer.setData("id", id);
+        console.log(id);
+    };
+
     onDragOver = e => {
         e.preventDefault();
     };
     render() {
         return (
 
-            <div draggable className="boat" onDragStart={e => this.onDragStart(e, this.props.id)} style={{ background: this.bgColor }}>
+            <div draggable className="boat"
+                onDragStart={e => this.onDragStart(e, this.props.id)}
+                onTouchStart={e => this.onTouchStart(e, this.props.id)}
+                style={{ background: this.bgColor }}>
                 <span className="boatName">{this.props.name}</span>
                 {this.props.children}
             </div>
