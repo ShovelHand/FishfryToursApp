@@ -77,14 +77,19 @@ class MainContent extends React.Component {
         this.setState({ isClicked: obj });
     };
 
-    handleNewTask = content => {
-        const task = {};
-        task.name = content;
-        task.bgColor = "#9fa8da";
-        task.category = "wip";
-        const tasks = [...this.state.data, task];
-        this.setState({ tasks });
+    handleNewBoat = (name) => {
+        const boat = {};
+        boat.Name = name;
+        boat.Status = "docked";
+        var id = this.state.data.length;
+        while (this.state.data.filter(boat => { boat.Id == id}) != null) {
+            id++;
+        }
+        boat.Id = id;
+        const boats = [...this.state.data, boat];
+        this.setState({ boats });
     };
+
 
     render() {
         const statusLanes = {
@@ -110,15 +115,15 @@ class MainContent extends React.Component {
                 console.warn("a boat is not shown as it has an invalid status type. Name: " + t.Name + " Status: " + t.Status);
         });
         const loader = this.state.isClicked ? (
-            <NewTask
-                handleNewTask={this.handleNewTask}
+            <NewBoat
+                handleNewBoat={this.handleNewBoat}
                 handleClose={this.handleClose}
             />
         ) : null;
         return (
             <div className="mainContent">
                 <h1>Fishfry Tours</h1>
-
+                <NewBoatPanel handleNewBoat={this.handleNewBoat} />
                 <p className="header">Drag & drop boats between swimlanes to set their status</p>
 
                 <KanbanBoard data={this.state.data} statusLanes={statusLanes} onDragOver={this.onDragOver} onDragStart={this.onDragStart} onDrop={this.onDrop} onTouchStart={this.onTouchStart} />
@@ -126,6 +131,64 @@ class MainContent extends React.Component {
             </div>
                 
 
+        );
+    }
+}
+
+class NewBoatPanel extends React.Component {
+    addNew = () => {
+        this.props.handleNewBoat();
+    }
+    render() {
+        return (
+            <div className="newBoatInput">
+                <span>Add new boat?</span><br/>
+                <span id="addButtonLabel">Boat's name:</span>
+                <input type="text" id="fname" name="fname" />
+                <span id="newBoatButton" > Add </span>
+            </div>
+        );
+    }
+}
+class NewBoat extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            content: ""
+        };
+    }
+
+    handleClose = () => {
+        this.props.handleClose(false);
+    };
+    handleChange = e => {
+        let val = e.target.value;
+        this.setState({ content: val });
+    };
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.handleNewBoat(this.state.content);
+        this.setState({ content: "" });
+        this.props.handleClose(false);
+    };
+    render() {
+        return (
+            <div className="container-popup">
+                <div className="popupScreen">
+                    <span className="closebtn right" onClick={this.handleClose}>
+                        &#10005;
+          </span>
+                    <p>Add New Task</p>
+                    <form onSubmit={this.handleSubmit}>
+                        <input
+                            value={this.state.content}
+                            type="text"
+                            placeholder="type and click enter to submit"
+                            onChange={this.handleChange}
+                        />
+                    </form>
+                </div>
+            </div>
         );
     }
 }
@@ -232,6 +295,7 @@ class DockedLane extends Lane {
                 onDrop={e => this.props.onDrop(e, "docked")}
             >
                 <div className="swimlaneHeader">Docked</div>
+                
                 { boatNodes}
                 <span>
 
