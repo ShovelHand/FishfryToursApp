@@ -13,11 +13,29 @@ class MainContent extends React.Component {
         xhr.onreadystatechange = () => {
             switch (xhr.status) {
                 case 200:
-
                     // handle success, like stop a loading spinner, give feedbak toast
                     break;
                 case 400:
                     console.error("an error occurred");
+                    break;
+            }
+        }
+
+        xhr.send();
+    }
+
+    sendBoatToDB = (boat) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('post', "createBoat?Name=" + boat.Name + "&status=" + boat.Status, true);
+        xhr.onreadystatechange = () => {
+            switch (xhr.status) {
+                case 200:
+                    console.log("boat created on server")
+                    boat.Id = xhr.responseText;
+                    console.log("returned boat id: " + boat.Id)
+                    break;
+                case 400:
+                    console.error(xhr.responseText);
                     break;
             }
         }
@@ -75,17 +93,22 @@ class MainContent extends React.Component {
     };
 
     handleNewBoat = (name) => {
-        console.log("handle new boat");
         const boat = {};
         if (!name || name === "")
             return;
+        let boatWithExistingName = this.state.data.filter(t => t.Name === name);
+        if (boatWithExistingName.length > 0) {
+            console.warn("duplicate boat names not allowed.")
+            return;
+        }
         boat.Name = name;
         boat.Status = "docked";
         var id = this.state.data.length + 1;
         boat.Id = id;
-       
-    //    this.state.data.push(boat);
-    //    this.setState({ ...this.state.data});
+        this.sendBoatToDB(boat);
+        this.state.data.push(boat);
+        this.setState({ ...this.state.data });
+        document.getElementById("fname").value = "";
     };
 
 

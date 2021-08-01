@@ -45,30 +45,32 @@ namespace FishfryTours.Controllers
 				return e.Message;
 			}
 		}
-		
-		
+
 		//Create new boat entity in DB
+		[Route("CreateBoat")]
 		[HttpPost]
-		public async Task<IActionResult> CreateBoat([Bind("Id,Name,Status")] Boat boat)
+		public IActionResult CreateBoat([Bind("Name,Status")] Boat boat)
 		{ 
 			try
 			{
 				if (ModelState.IsValid)
 				{
 					_context.Add(boat);
-					await _context.SaveChangesAsync();	
-					return Ok();
+	
+					_context.SaveChanges();	
+					return Ok(boat.Id);
 				}
 				else
 					throw new Exception("Model state was not valid adding boat to database");
 			}
 			catch(Exception e)
 			{
-				return BadRequest(e.Message);
+				return BadRequest(e.InnerException.Message);
 			}
 		}
 
 		//Destroy boat entity in DB
+		[Route("DeleteBoat")]
 		[HttpPost]
 		public async Task<IActionResult> DeleteBoat(int id)
 		{
