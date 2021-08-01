@@ -120,9 +120,22 @@ body {
 #addButtonLabel{
     margin-right: 4px;
 }
-#newBoatButton{
+#newBoatButton {
     margin-left: 10%;
+    height: 36px;
+    width: 60px;
+    padding: 4px;
+    background-color: blue;
+    color: whitesmoke;
+    font-size: 1.2em;
+    font-weight: 500;
+    display: inline-block;
+    text-align: center;
+    border-radius: 15px;
 }
+    #newBoatButton:hover {
+        background-color:blueviolet;
+    }
 /*.btn {
     margin-top: 200px;
 }

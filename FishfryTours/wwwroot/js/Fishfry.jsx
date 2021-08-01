@@ -8,7 +8,6 @@ class MainContent extends React.Component {
 
     
     updateBoatStatus = (id, status) => {
-
         const xhr = new XMLHttpRequest();
         xhr.open('post', "UpdateBoat?id=" + id + "&status=" + status, true);
         xhr.onreadystatechange = () => {
@@ -21,11 +20,9 @@ class MainContent extends React.Component {
                     console.error("an error occurred");
                     break;
             }
-
         }
 
         xhr.send();
-
     }
 
     loadBoatsFromServer() {
@@ -78,16 +75,17 @@ class MainContent extends React.Component {
     };
 
     handleNewBoat = (name) => {
+        console.log("handle new boat");
         const boat = {};
+        if (!name || name === "")
+            return;
         boat.Name = name;
         boat.Status = "docked";
-        var id = this.state.data.length;
-        while (this.state.data.filter(boat => { boat.Id == id}) != null) {
-            id++;
-        }
+        var id = this.state.data.length + 1;
         boat.Id = id;
-        const boats = [...this.state.data, boat];
-        this.setState({ boats });
+       
+    //    this.state.data.push(boat);
+    //    this.setState({ ...this.state.data});
     };
 
 
@@ -116,8 +114,8 @@ class MainContent extends React.Component {
         });
         const loader = this.state.isClicked ? (
             <NewBoat
-                handleNewBoat={this.handleNewBoat}
-                handleClose={this.handleClose}
+             //   handleNewBoat={this.handleNewBoat}
+            //    handleClose={this.handleClose}
             />
         ) : null;
         return (
@@ -137,7 +135,7 @@ class MainContent extends React.Component {
 
 class NewBoatPanel extends React.Component {
     addNew = () => {
-        this.props.handleNewBoat();
+        this.props.handleNewBoat(document.getElementById("fname").value);
     }
     render() {
         return (
@@ -145,7 +143,7 @@ class NewBoatPanel extends React.Component {
                 <span>Add new boat?</span><br/>
                 <span id="addButtonLabel">Boat's name:</span>
                 <input type="text" id="fname" name="fname" />
-                <span id="newBoatButton" > Add </span>
+                <div id="newBoatButton" onClick={this.addNew} > Add </div>
             </div>
         );
     }
