@@ -140,6 +140,7 @@ namespace FishfryTours.Controllers
 		}
 
 		//Create new guide entity in DB
+		[Route("CreateGuide")]
 		[HttpPost]
 		public async Task<IActionResult> CreateGuide([Bind("Name,AssignedBoatId")] Guide guide)
 		{
@@ -161,6 +162,7 @@ namespace FishfryTours.Controllers
 		}
 
 		//update Guide info in DB (phone, email, etc.)
+		[Route("UpdateGuide")]
 		[HttpPost]
 		public IActionResult UpdateGuide(int id, int assignedBoatId) // not yet sure if we'll track boat to guide, or guide to boat
 		{

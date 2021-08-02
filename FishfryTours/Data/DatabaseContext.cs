@@ -34,8 +34,6 @@ namespace FishfryTours.Models
 			modelBuilder.Entity<Boat>(entity =>
 			{
 				entity.HasKey(e => e.Id);
-				//	entity.ToTable("Boats");
-				// … 
 			});
 			modelBuilder.Entity<Guide>(entity =>
 			{
