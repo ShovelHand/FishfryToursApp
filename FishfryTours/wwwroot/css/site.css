@@ -74,11 +74,10 @@ body {
 /* Kanban board and child components */
 .kanbanBoard {
     display: flex;
-    position: absolute;
     background-color: #808080;
     width: 60%;
     min-width: 400px;
-    min-height: 50%;
+    min-height: 400px;
 }
 .dockedLane, .inboundLane, .outboundLane, .maintenanceLane {
    display: inline-block;
@@ -100,15 +99,18 @@ body {
     margin-bottom: 16px;
 }
 
-.boat{
-    background-color: aqua;
-    border-radius: 30px;
+.boat {
+    background-color: white;
     width: 96%;
     margin-left: 2%;
     margin-bottom: 8px;
     font-size: 1.2em;
     font-weight: 500;
 }
+    .boat .boatName {
+        background-color: aqua;
+        border-radius: 10px;
+    }
 
 .newBoatInput {
     width: 50%;
@@ -173,6 +175,34 @@ body {
 .popupScreen {
     text-align: center;
 }
+
+.guidePanel {
+    display: flex;
+    bottom: 20%;
+    border-style: solid;
+    border-width: thin;
+    width: 60%;
+    min-width: 400px;
+    min-height: 50px;
+    background-color: #808080;
+}
+
+.guide {
+    background-color: azure;
+    border-radius: 10px;
+    height: fit-content;
+    width: 56px;
+    text-align: center;
+    font-weight: 600;
+    margin: 2px;
+}
+.boatGuideArea {
+    min-height: 40px;
+    font-weight: 400;
+    font-size: 0.8em;
+    text-align: left;
+}
+
 /*.btn {
     margin-top: 200px;
 }

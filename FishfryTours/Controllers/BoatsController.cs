@@ -116,9 +116,32 @@ namespace FishfryTours.Controllers
 
 		}
 
+
+		//Get all boat entities in DB
+		[Route("GetGuides")]
+		[HttpGet]
+		public string GetGuides()
+		{
+			try
+			{
+				var guides = _context.Guides;
+				if (guides != null && guides.Any())
+				{
+					string guideJson = JsonSerializer.Serialize(guides);
+					return guideJson;
+				}
+				else
+					throw new Exception("no guides found in DB");
+			}
+			catch (Exception e)
+			{
+				return e.Message;
+			}
+		}
+
 		//Create new guide entity in DB
 		[HttpPost]
-		public async Task<IActionResult> CreateGuide([Bind("Id,Name,Phone,Email,EmergencyContact")] Guide guide)
+		public async Task<IActionResult> CreateGuide([Bind("Name,AssignedBoatId")] Guide guide)
 		{
 			try
 			{
@@ -144,9 +167,10 @@ namespace FishfryTours.Controllers
 			try
 			{
 				Guide guide = _context.Guides.Find(id);
+				guide.AssignedBoatId = assignedBoatId;
 				if(ModelState.IsValid && guide != null)
 				{
-				
+					_context.Update(guide);
 					return Ok();
 				}
 				else
@@ -180,13 +204,13 @@ namespace FishfryTours.Controllers
 		}
 
 
-		//Assign a guide to a boat
-		[HttpPost]
-		public IActionResult AssignGuideToBoat(int boatId, int guideId)
-		{
+		////Assign a guide to a boat
+		//[HttpPost]
+		//public IActionResult AssignGuideToBoat(int boatId, int guideId)
+		//{
 
-			return Ok();
-		}
+		//	return Ok();
+		//}
 
 
 		public async Task<IActionResult> Boats()

@@ -2,7 +2,10 @@
 class MainContent extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { data: [] };
+        this.state = {
+            data: [],
+            guides: []
+        };
         isClicked: false
         currentId: null;
         currentEntityType: null
@@ -51,7 +54,6 @@ class MainContent extends React.Component {
     }
 
     loadBoatsFromServer() {
-        console.log("boats loading");
         const xhr = new XMLHttpRequest();
         xhr.open('get', this.props.url, true);
         xhr.onload = () => {
@@ -61,8 +63,71 @@ class MainContent extends React.Component {
         xhr.send();
     }
 
+    deleteBoat = (id) => {
+        this.state.data.pop(this.state.data.filter(t => t.Id === id));
+        this.setState({ ...this.state.data });
+        const xhr = new XMLHttpRequest();
+        xhr.open('post', "DeleteBoat?id=" + id, true);
+        xhr.onreadystatechange = () => {
+            switch (xhr.status) {
+                case 200:
+
+                    break;
+                case 400:
+                    console.error(xhr.responseText);
+                    break;
+            }
+        }
+        xhr.send();
+    };
+
+    /*GUIDES */
+    loadGuidesFromServer() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('get', "GetGuides", true);
+        xhr.onload = () => {
+            const guides = JSON.parse(xhr.responseText);
+            this.setState({ guides: guides });
+        };
+        xhr.send();
+    }
+
+    deleteGuide = (id) => {
+        this.state.guides.pop(this.state.guides.filter(t => t.Id === id));
+        this.setState({ ...this.state.guides });
+        const xhr = new XMLHttpRequest();
+        xhr.open('post', "DeleteGuide?id=" + id, true);
+        xhr.onreadystatechange = () => {
+            switch (xhr.status) {
+                case 200:
+                    break;
+                case 400:
+                    console.error(xhr.responseText);
+                    break;
+            }
+        }
+        xhr.send();
+    };
+
+    updateGuide = (id, boatId) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('post', "UpdateBoat?id=" + id + "&boatId=" + boatId, true);
+        xhr.onreadystatechange = () => {
+            switch (xhr.status) {
+                case 200:
+                    // handle success, like stop a loading spinner, give feedbak toast
+                    break;
+                case 400:
+                    console.error("an error occurred");
+                    break;
+            }
+        }
+
+        xhr.send();
+    }
     componentWillMount() {
         this.loadBoatsFromServer();
+        this.loadGuidesFromServer();
     }
     onDragOver = e => {
         e.preventDefault();
@@ -78,41 +143,27 @@ class MainContent extends React.Component {
     }
 
     onDrop = (e, status) => {
+        let entityType = e.dataTransfer.getData("entityType");
+        console.log("entityType: " + entityType);
         let id = e.dataTransfer.getData("id");
-        let boats = this.state.data.filter(boat => {
-            if (boat.Id == id) {
-                if(boat.Status != status)
-                    boat.Status = status;
-                this.updateBoatStatus(boat.Id, status);
+        if (entityType === "boat") {
+            let boats = this.state.data.filter(boat => {
+                if (boat.Id == id) {
+                    if(boat.Status != status)
+                        boat.Status = status;
+                    this.updateBoatStatus(boat.Id, status);
                
-            }
-            return boat;
-        });
+                }
+                return boat;
+            });
+            this.setState({ ...this.state.data, boats });
+        }
 
-        this.setState({ ...this.state.data, boats });
     };
 
     handleDelete = () => {
         let val = this.state.isClicked ? false : true;
         this.setState({ isClicked: val });
-    };
-
-    deleteBoat = (id) => {
-        this.state.data.pop(this.state.data.filter(t => t.Id === id));
-        this.setState({ ...this.state.data });
-         const xhr = new XMLHttpRequest();
-        xhr.open('post', "DeleteBoat?id="+ id, true);
-        xhr.onreadystatechange = () => {
-            switch (xhr.status) {
-                case 200:
-
-                    break;
-                case 400:
-                    console.error(xhr.responseText);
-                    break;
-            }
-        }
-        xhr.send();
     };
 
     handleClose = () => {
@@ -170,11 +221,28 @@ class MainContent extends React.Component {
                 </div>
                 <p className="header">Drag & drop boats between swimlanes to set their status</p>
 
-                <KanbanBoard data={this.state.data} statusLanes={statusLanes} onDragOver={this.onDragOver} onDragStart={this.onDragStart} onDrop={this.onDrop} onTouchStart={this.onTouchStart}  />
-
+                <KanbanBoard data={this.state.data} statusLanes={statusLanes} onDragOver={this.onDragOver} onDragStart={this.onDragStart} onDrop={this.onDrop} onTouchStart={this.onTouchStart} />
+                <br/>
+                <GuidePanel guides={ this.state.guides } />
             </div>
                 
 
+        );
+    }
+}
+
+class GuidePanel extends React.Component {
+    render() {
+        console.log(this.props.guides);
+        const guideNodes = this.props.guides.map(guide => (
+            <Guide name={guide.Name} key={guide.Id} id={guide.Id} assignedBoatId={guide.AssignedBoatId} >
+            </Guide>
+        ));
+        return (
+            <div className="guidePanel">
+                <p>Guides: </p><br/>
+                {guideNodes}
+            </div>
         );
     }
 }
@@ -330,6 +398,7 @@ class Lane extends React.Component {
 
     }
     onDrop = (e, status) => {
+        
         let id = e.dataTransfer.getData("id");
         let boats = this.props.data.filter(boat => {
             if (boat.id == id) {
@@ -436,20 +505,28 @@ class MaintenanceLane extends Lane {
     }
 }
 
+class Entity extends React.Component {
+
+    onDragEnd = (e) => {
+        var deleteButton = document.getElementById("deleteDropButton");
+        deleteButton.style.backgroundColor = "blue";
+    }
+    render(){}
+}
+
 /*boat draggable card */
 class Boat extends React.Component {
+
     onDragStart = (e, id) => {
-        e.dataTransfer.setData("id", id);
         e.dataTransfer.setData("entityType", "boat")
+        e.dataTransfer.setData("id", id);
+
         var deleteButton = document.getElementById("deleteDropButton");
         deleteButton.style.backgroundColor = "#e57373";
     };
-    //onTouchStart = (e, id) => {
-    //    e.dataTransfer.setData("id", id);
-    //    console.log(id);
-    //};
-
     onDragOver = e => {
+        var deleteButton = document.getElementById("deleteDropButton");
+        deleteButton.style.backgroundColor = "blue";
         e.preventDefault();
     };
     onDragEnd = (e) => {
@@ -463,8 +540,51 @@ class Boat extends React.Component {
                 onDragStart={e => this.onDragStart(e, this.props.id)}
                 onDragEnd={e => this.onDragEnd(e)}
              //   onTouchStart={e => this.onTouchStart(e, this.props.id)}
-                style={{ background: this.bgColor }}>
-                <span className="boatName">{this.props.name}</span>
+                >
+                <div className="boatName">{this.props.name}</div>
+                <BoatGuideDropArea />
+                {this.props.children}
+       
+            </div>
+        );
+    }
+}
+class BoatGuideDropArea extends React.Component {
+    render() {
+        return (
+            <div className="boatGuideArea">
+                Guides
+            </div>
+        );
+    }
+}
+
+//guide draggable card 
+class Guide extends React.Component {
+    onDragStart = (e, id) => {
+        e.dataTransfer.setData("id", id);
+        e.dataTransfer.setData("entityType", "guide")
+        var deleteButton = document.getElementById("deleteDropButton");
+        deleteButton.style.backgroundColor = "#e57373";
+    };
+    onDragOver = e => {
+        var deleteButton = document.getElementById("deleteDropButton");
+        deleteButton.style.backgroundColor = "blue";
+        e.preventDefault();
+    };
+    onDragEnd = (e) => {
+        var deleteButton = document.getElementById("deleteDropButton");
+        deleteButton.style.backgroundColor = "blue";
+    }
+    render() {
+        return (
+
+            <div draggable className="guide"
+                onDragStart={e => this.onDragStart(e, this.props.id)}
+                onDragEnd={e => this.onDragEnd(e)}
+
+                >
+                <span className="guideName">{this.props.name}</span>
                 {this.props.children}
             </div>
         );
