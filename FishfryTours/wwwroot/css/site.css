@@ -195,6 +195,7 @@ body {
     text-align: center;
     font-weight: 600;
     margin: 2px;
+    float: right;
 }
 .boatGuideDropArea {
     min-height: 40px;
@@ -202,39 +203,3 @@ body {
     font-size: 0.8em;
     text-align: left;
 }
-
-/*.btn {
-    margin-top: 200px;
-}
-
-.container-popup {
-    position: absolute;
-    z-index: 3;
-    background-color: rgba(0, 0, 0, 0.5);
-    height: 100vh;
-    width: 1366px;
-    top: 0;
-    left: 0;
-    padding: 0;
-    margin: 0 auto;
-}
-
-.popupScreen {
-    margin-top: 10%;
-    margin-left: 32%;
-    background-color: #fff;
-    color: #333;
-    text-align: center;
-    width: 35%;
-}
-
-.closebtn {
-    font-size: 16px;
-    cursor: pointer;
-    margin-right: 15px;
-    margin-top: 5px;
-}
-
-    .closebtn:hover {
-        color: #cd2c31;
-    }*/

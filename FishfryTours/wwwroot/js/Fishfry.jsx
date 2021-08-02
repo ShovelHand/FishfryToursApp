@@ -27,7 +27,7 @@ class MainContent extends React.Component {
         }
 
         xhr.send();
-    }
+    };
 
     sendBoatToDB = (boat) => {
         const xhr = new XMLHttpRequest();
@@ -35,7 +35,7 @@ class MainContent extends React.Component {
         xhr.onreadystatechange = () => {
             switch (xhr.status) {
                 case 200:
-                    
+
                     break;
                 case 400:
                     console.error(xhr.responseText);
@@ -49,7 +49,7 @@ class MainContent extends React.Component {
         }
 
         xhr.send();
-    }
+    };
 
     loadBoatsFromServer() {
         const xhr = new XMLHttpRequest();
@@ -59,7 +59,7 @@ class MainContent extends React.Component {
             this.setState({ data: data });
         };
         xhr.send();
-    }
+    };
 
     deleteBoat = (id) => {
         this.state.data.pop(this.state.data.filter(t => t.Id === id));
@@ -88,41 +88,8 @@ class MainContent extends React.Component {
             this.setState({ guides: guides });
         };
         xhr.send();
-    }
-
-    deleteGuide = (id) => {
-        this.state.guides.pop(this.state.guides.filter(t => t.Id === id));
-        this.setState({ ...this.state.guides });
-        const xhr = new XMLHttpRequest();
-        xhr.open('post', "DeleteGuide?id=" + id, true);
-        xhr.onreadystatechange = () => {
-            switch (xhr.status) {
-                case 200:
-                    break;
-                case 400:
-                    console.error(xhr.responseText);
-                    break;
-            }
-        }
-        xhr.send();
     };
 
-    updateGuide = (id, boatId) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('post', "UpdateGuide?id=" + id + "&boatId=" + boatId, true);
-        xhr.onreadystatechange = () => {
-            switch (xhr.status) {
-                case 200:
-                    // handle success, like stop a loading spinner, give feedbak toast
-                    break;
-                case 400:
-                    console.error("an error occurred");
-                    break;
-            }
-        }
-
-        xhr.send();
-    };
     componentWillMount() {
         this.loadBoatsFromServer();
         this.loadGuidesFromServer();
@@ -149,7 +116,7 @@ class MainContent extends React.Component {
                 if (boat.Id == id) {
                     if(boat.Status != status)
                         boat.Status = status;
-                  //  this.updateBoatStatus(boat.Id, status);
+                    this.updateBoatStatus(boat.Id, status);
                
                 }
                 let guides = this.state.guides.filter(guide => guide.AssignedBoatId === boat.Id);
@@ -159,19 +126,7 @@ class MainContent extends React.Component {
             });
             this.setState({ ...this.state.data, boats });
         }
-        else if (entityType === "guide") {
-            console.log("trying to update guide");
-            let guides = this.state.data.filter(guide => {
-                if (guide.Id == id) {
-          
-
-                }
-                let boats = this.state.data.filter(boat => boat.Id === guide.AssignedBoatId);
-       
-                return guide;
-            });
-          //  this.setState({ ...this.state.guides, guides });
-        }
+     
 
     };
 
@@ -235,9 +190,7 @@ class MainContent extends React.Component {
                 </div>
                 <p className="header">Drag & drop boats between swimlanes to set their status</p>
 
-                <KanbanBoard data={this.state.data} guides={ this.state.guides} statusLanes={statusLanes} onDragOver={this.onDragOver} onDragStart={this.onDragStart} onDrop={this.onDrop} onTouchStart={this.onTouchStart} updateGuide={this.updateGuide}/>
-                <br />
-                <GuidePanel guides={this.state.guides} updateGuide={this.updateGuide} />
+                <KanbanBoard data={this.state.data} guides={ this.state.guides} statusLanes={statusLanes} onDragOver={this.onDragOver} onDragStart={this.onDragStart} onDrop={this.onDrop} />
             </div>
                 
 
@@ -245,43 +198,6 @@ class MainContent extends React.Component {
     }
 }
 
-class GuidePanel extends React.Component {
-    constructor(props) {
-        super(props);
-
-    }
-    
-    onDragOver = e => {
-        e.preventDefault();
-    };
-    onDrop = (e) => {
-        if (e.dataTransfer.getData("entityType") != "guide") {
-            return;
-        }
-        else {
-            const id = e.dataTransfer.getData("id");
-            console.log("guide dropped in panel: " + id);
-            this.props.updateGuide(id, 0);
-        }
-       
-    };
-    render() {
-
-        const guideNodes = this.props.guides.map(guide => (
-            <Guide name={guide.Name} key={guide.Id} id={guide.Id} assignedBoatId={guide.AssignedBoatId} >
-            </Guide>
-        ));
-        return (
-            <div className="guidePanel"
-                onDrop={e => this.onDrop(e)}
-                onDragOver={e => this.onDragOver(e)}
-            >
-                <p>Guides: </p><br/>
-                {guideNodes}
-            </div>
-        );
-    }
-}
 
 class NewBoatPanel extends React.Component {
     addNew = () => {
@@ -343,9 +259,7 @@ class ConfirmDeleteDialog extends React.Component {
 
     }
     deleteEntity = () => {
-        console.log("delete entity with id " + this.props.currentId);
         if (this.props.currentEntityType === "boat") {
-            console.log("deleting boat... " + this.props.currentId);
             this.props.deleteBoat(this.props.currentId);
         }
         this.props.handleClose();
@@ -379,7 +293,6 @@ class KanbanBoard extends React.Component {
                     onDragStart={this.props.onDragStart}
                     onDrop={this.props.onDrop}
                     onTouchStart={this.props.onTouchStart}
-                    updateGuide={this.updateGuide}
                     guides={this.props.guides}
                     boats={this.props.data.filter(t => t.Status == "docked")}
                     
@@ -389,7 +302,6 @@ class KanbanBoard extends React.Component {
                     onDragOver={this.props.onDragOver}
                     onDragStart={this.props.onDragStart}
                     onDrop={this.props.onDrop}
-                    updateGuide={this.updateGuide}
                     guides={this.props.guides}
                     boats={this.props.data.filter(t => t.Status == "outbound")} />
 
@@ -397,7 +309,6 @@ class KanbanBoard extends React.Component {
                     onDragOver={this.props.onDragOver}
                     onDragStart={this.props.onDragStart}
                     onDrop={this.props.onDrop}
-                    updateGuide={this.updateGuide}
                     guides={this.props.guides}
                     boats={this.props.data.filter(t => t.Status == "inbound")} />
 
@@ -405,7 +316,6 @@ class KanbanBoard extends React.Component {
                     onDragOver={this.props.onDragOver}
                     onDragStart={this.props.onDragStart}
                     onDrop={this.props.onDrop}
-                    updateGuide={this.updateGuide}
                     guides={this.props.guides}
                     boats={this.props.data.filter(t => t.Status == "maintenance")} />
 
@@ -421,7 +331,6 @@ class DockedLane extends React.Component {
             <Boat name={boat.Name} key={boat.Id}
                 id={boat.Id}
                 status={boat.Status}
-                updateGuide={this.updateGuide}
                 guides={this.props.guides}
             >
                 
@@ -449,7 +358,6 @@ class OutboundLane extends React.Component  {
     render() {
         const boatNodes = this.props.boats.map(boat => (
             <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status}
-                updateGuide={this.updateGuide}
                 guides={this.props.guides}
             >
                 {boat.boatName}
@@ -470,7 +378,6 @@ class InboundLane extends React.Component  {
     render() {
         const boatNodes = this.props.boats.map(boat => (
             <Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status}
-                updateGuide={this.updateGuide}
                 guides={this.props.guides}
             >
                 {boat.boatName}
@@ -491,7 +398,6 @@ class MaintenanceLane extends React.Component  {
     render() {
         const boatNodes = this.props.boats.map(boat => (
             < Boat name={boat.Name} key={boat.Id} id={boat.Id} status={boat.Status}
-                updateGuide={this.updateGuide}
                 guides={this.props.guides}
             >
                 { boat.boatName }
@@ -508,29 +414,6 @@ class MaintenanceLane extends React.Component  {
         );
     }
 }
-
-/*  const boatNodes = this.props.boats.map(boat => (
-            <Boat name={boat.Name} key={boat.Id}
-                id={boat.Id}
-                status={boat.Status}
-            >
-
-                {boat.boatName}
-            </Boat>
-        ));
-        return (
-            <div className="dockedLane"
-                onDragOver={e => this.props.onDragOver(e)}
-                onDrop={e => this.props.onDrop(e, "docked")}
-            >
-                <div className="swimlaneHeader">Docked</div>
-
-                { boatNodes}
-                <span>
-
-                </span>
-            </div>
-        ); /*
 
 /*boat draggable card */
 class Boat extends React.Component {
@@ -559,10 +442,8 @@ class Boat extends React.Component {
     render() {
         const guideNodes = [];
         this.props.guides.forEach(guide => {
-            console.log("guide: " + guide.AssignedBoatId + " boat: " + this.props.id);
             if (guide.AssignedBoatId === this.props.id) {
 
-                console.log(guide);
                 guideNodes.push(<Guide name={guide.Name} key={guide.Id}
                     id={guide.Id}
                 >
@@ -579,7 +460,6 @@ class Boat extends React.Component {
                 >
                 <div className="boatName">{this.props.name}</div>
                 <BoatGuideDropArea boatId={this.props.id}
-                //    updateBoatAndGuide={this.updateBoatAndGuide}
                     guideNodes={ guideNodes }
                 >
                     
@@ -595,25 +475,13 @@ class BoatGuideDropArea extends React.Component {
         super(props);
 
     }
-    onDragOver = e => {
-        e.preventDefault();
-    };
-    onDrop = (e) => {
-        console.log("dropped on boat drop area");
-        if (e.dataTransfer.getData("entityType") === "guide") {
-            const id = e.dataTransfer.getData("id");
-            e.dataTransfer.setData("boatId", this.props.boatId);
-            console.log("guide id: " + id + "dropped on boat: " + this.props.boatId);
-        //    this.props.updateBoatAndGuide(id, this.props.boatId)
-        }
-
-    };
+  
     render() {
         return (
             <div className="boatGuideDropArea"
                 onDrop={this.onDrop}
             >
-                Guides
+                Guides: <br/>
                 {this.props.guideNodes}
             </div>
         );
@@ -622,25 +490,10 @@ class BoatGuideDropArea extends React.Component {
 
 //guide draggable card 
 class Guide extends React.Component {
-    onDragStart = (e, id) => {
-        e.dataTransfer.setData("id", id);
-        e.dataTransfer.setData("entityType", "guide")
-        var deleteButton = document.getElementById("deleteDropButton");
-        deleteButton.style.backgroundColor = "#e57373";
-    };
-    onDragOver = e => {
-        var deleteButton = document.getElementById("deleteDropButton");
-        deleteButton.style.backgroundColor = "blue";
-        e.preventDefault();
-    };
-    onDragEnd = (e) => {
-        var deleteButton = document.getElementById("deleteDropButton");
-        deleteButton.style.backgroundColor = "blue";
-    }
     render() {
         return (
 
-            <div draggable className="guide"
+            <div className="guide"
                 onDragStart={e => this.onDragStart(e, this.props.id)}
                 onDragEnd={e => this.onDragEnd(e)}
 
