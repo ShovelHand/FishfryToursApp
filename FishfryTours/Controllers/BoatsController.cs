@@ -220,5 +220,11 @@ namespace FishfryTours.Controllers
 
 			return View(await _context.Boats.ToListAsync());
 		}
+
+		public async Task<IActionResult> Guides()
+		{
+
+			return View(await _context.Guides.ToListAsync());
+		}
 	}
 }

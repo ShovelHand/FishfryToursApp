@@ -24,9 +24,14 @@ namespace FishfryTours.Controllers
 			return View();
 		}
 
-		public IActionResult Privacy()
+		public IActionResult Guids()
 		{
-			return View();
+			return View("../Boats/Guides");
+		}
+
+		public IActionResult Boats()
+		{
+			return View("../Boats/Boats");
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
