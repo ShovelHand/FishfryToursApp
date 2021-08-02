@@ -141,7 +141,7 @@ class MainContent extends React.Component {
 
     handleNewBoat = (name) => {
         const boat = {};
-        if (!name || name === "")z
+        if (!name || name === "")
             return;
         let boatWithExistingName = this.state.data.filter(t => t.Name === name);
         if (boatWithExistingName.length > 0) {
