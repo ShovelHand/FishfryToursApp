@@ -4,6 +4,8 @@ class MainContent extends React.Component {
         super(props);
         this.state = { data: [] };
         isClicked: false
+        currentId: null;
+        currentEntityType: null
     }
 
     
@@ -30,14 +32,19 @@ class MainContent extends React.Component {
         xhr.onreadystatechange = () => {
             switch (xhr.status) {
                 case 200:
-                    console.log("boat created on server")
-                    boat.Id = xhr.responseText;
-                    console.log("returned boat id: " + boat.Id)
+                    
                     break;
                 case 400:
                     console.error(xhr.responseText);
                     break;
             }
+        }
+        xhr.onload = () => {
+            console.log("boat created on server")
+            boat.Id = xhr.responseText;
+            console.log("returned boat id: " + boat.Id)
+            this.state.data.push(boat);
+            this.setState({ ...this.state.data });
         }
 
         xhr.send();
@@ -53,6 +60,7 @@ class MainContent extends React.Component {
         };
         xhr.send();
     }
+
     componentWillMount() {
         this.loadBoatsFromServer();
     }
@@ -60,7 +68,8 @@ class MainContent extends React.Component {
         e.preventDefault();
     };
 
-    onDragStart = (e, id) => {
+    onDragStart = (e, id, entityType) => {
+        console.log(entityType)
         e.dataTransfer.setData("id", id);
     };
     onTouchStart = (e, id) => {
@@ -88,8 +97,26 @@ class MainContent extends React.Component {
         this.setState({ isClicked: val });
     };
 
-    handleClose = obj => {
-        this.setState({ isClicked: obj });
+    deleteBoat = (id) => {
+        this.state.data.pop(this.state.data.filter(t => t.Id === id));
+        this.setState({ ...this.state.data });
+         const xhr = new XMLHttpRequest();
+        xhr.open('post', "DeleteBoat?id="+ id, true);
+        xhr.onreadystatechange = () => {
+            switch (xhr.status) {
+                case 200:
+
+                    break;
+                case 400:
+                    console.error(xhr.responseText);
+                    break;
+            }
+        }
+        xhr.send();
+    };
+
+    handleClose = () => {
+        this.setState({ isClicked: false });
     };
 
     handleNewBoat = (name) => {
@@ -103,11 +130,9 @@ class MainContent extends React.Component {
         }
         boat.Name = name;
         boat.Status = "docked";
-        var id = this.state.data.length + 1;
-        boat.Id = id;
         this.sendBoatToDB(boat);
-        this.state.data.push(boat);
-        this.setState({ ...this.state.data });
+        
+       
         document.getElementById("fname").value = "";
     };
 
@@ -124,7 +149,7 @@ class MainContent extends React.Component {
                 statusLanes[t.Status].push(
                     <div className="boat"
                         key={t.Id}
-                        onDragStart={e => this.onDragStart(e, t.Id)}
+                        onDragStart={e => this.onDragStart(e, t.Id, "boat")}
                         onTouchStart={e => this.onTouchStart(e, t.Id)}
                         draggable
                     >
@@ -141,11 +166,11 @@ class MainContent extends React.Component {
                 <h4>Fleet and Guide status</h4>
                 <div className="topUIElements">
                     <NewBoatPanel handleNewBoat={this.handleNewBoat} />
-                    <DeleteDropArea handleDelete={this.handleDelete} isClicked={this.state.isClicked} />
+                    <DeleteDropArea handleDelete={this.handleDelete} isClicked={this.state.isClicked} handleClose={this.handleClose} currentId={this.state.currentId} deleteBoat={this.deleteBoat} />
                 </div>
                 <p className="header">Drag & drop boats between swimlanes to set their status</p>
 
-                <KanbanBoard data={this.state.data} statusLanes={statusLanes} onDragOver={this.onDragOver} onDragStart={this.onDragStart} onDrop={this.onDrop} onTouchStart={this.onTouchStart} />
+                <KanbanBoard data={this.state.data} statusLanes={statusLanes} onDragOver={this.onDragOver} onDragStart={this.onDragStart} onDrop={this.onDrop} onTouchStart={this.onTouchStart}  />
 
             </div>
                 
@@ -170,14 +195,15 @@ class NewBoatPanel extends React.Component {
     }
 }
 class DeleteDropArea extends React.Component {
+
     constructor(props) {
         super(props);
       
     }
     onDrop = (e) => {
-        const id = e.dataTransfer.getData("id");
-        console.log("delete id: " + id);
-        this.props.handleDelete(id);
+        this.currentId = e.dataTransfer.getData("id");
+        this.currentEntityType = e.dataTransfer.getData("entityType");
+        this.props.handleDelete();
 
     };
 
@@ -185,10 +211,14 @@ class DeleteDropArea extends React.Component {
         e.preventDefault();
     };
     render() {
+        let currentId = null;
+        let currentEntityType = null;
         const loader = this.props.isClicked ? (
             <ConfirmDeleteDialog
-                //handleNewTask={this.handleNewTask}
-                //handleClose={this.handleClose}
+                handleClose={this.props.handleClose}
+                currentId={this.currentId}
+                currentEntityType={this.currentEntityType}
+                deleteBoat={this.props.deleteBoat}
             />
         ) : null;
         return (
@@ -199,6 +229,7 @@ class DeleteDropArea extends React.Component {
                     onDragOver={e => this.onDragOver(e)}
                     onDrop={e => this.onDrop(e, "docked")}
 
+
                 > Delete </div>
             </div>
         );
@@ -206,12 +237,19 @@ class DeleteDropArea extends React.Component {
 }
 
 class ConfirmDeleteDialog extends React.Component {
-    deleteEntity = (id) =>{
-        return;
-    }
-    cancelDelete = () => {
+    constructor(props) {
+        super(props);
 
     }
+    deleteEntity = () => {
+        console.log("delete entity with id " + this.props.currentId);
+        if (this.props.currentEntityType === "boat") {
+            console.log("deleting boat... " + this.props.currentId);
+            this.props.deleteBoat(this.props.currentId);
+        }
+        this.props.handleClose();
+    }
+
     render(){
         return (
             <div className="popupOverlay">
@@ -219,55 +257,12 @@ class ConfirmDeleteDialog extends React.Component {
                     <div className="popupScreen">
                         <h4>Really delete this entity?</h4>
                         <p>This action is permanent, and cannot be undone</p>
-                        <div id="deleteConfirmButton" onClick={ deleteEntity } > Yes </div>
-                        <div id="deleteCancelButton" onClick={cancelDelete}> Cancel </div>
+                        <div id="deleteConfirmButton" onClick={this.deleteEntity} > Yes </div>
+                        <div id="deleteCancelButton" onClick={this.props.handleClose}> Cancel </div>
                     </div>
                 </div>
             </div>
         
-        );
-    }
-}
-
-class NewBoat extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            content: ""
-        };
-    }
-
-    handleClose = () => {
-        this.props.handleClose(false);
-    };
-    handleChange = e => {
-        let val = e.target.value;
-        this.setState({ content: val });
-    };
-    handleSubmit = e => {
-        e.preventDefault();
-        this.props.handleNewBoat(this.state.content);
-        this.setState({ content: "" });
-        this.props.handleClose(false);
-    };
-    render() {
-        return (
-            <div className="container-popup">
-                <div className="popupScreen">
-                    <span className="closebtn right" onClick={this.handleClose}>
-                        &#10005;
-          </span>
-                    <p>Add New Task</p>
-                    <form onSubmit={this.handleSubmit}>
-                        <input
-                            value={this.state.content}
-                            type="text"
-                            placeholder="type and click enter to submit"
-                            onChange={this.handleChange}
-                        />
-                    </form>
-                </div>
-            </div>
         );
     }
 }
@@ -283,7 +278,9 @@ class KanbanBoard extends React.Component {
                     onDragStart={this.props.onDragStart}
                     onDrop={this.props.onDrop}
                     onTouchStart={this.props.onTouchStart}
-                    boats={this.props.data.filter(t => t.Status == "docked")} />
+                    boats={this.props.data.filter(t => t.Status == "docked")}
+                    
+                />
 
                 <OutboundLane
                     onDragOver={this.props.onDragOver}
@@ -314,7 +311,6 @@ class KanbanBoard extends React.Component {
 
 class Lane extends React.Component {
     updateBoatStatus = (id, status) => {
-
         const xhr = new XMLHttpRequest();
         xhr.open('post', "UpdateBoat?id=" + id + "&status=" + status, true);
         xhr.onreadystatechange = () => {
@@ -444,6 +440,7 @@ class MaintenanceLane extends Lane {
 class Boat extends React.Component {
     onDragStart = (e, id) => {
         e.dataTransfer.setData("id", id);
+        e.dataTransfer.setData("entityType", "boat")
         var deleteButton = document.getElementById("deleteDropButton");
         deleteButton.style.backgroundColor = "#e57373";
     };
