@@ -21,13 +21,6 @@ namespace FishfryTours.Controllers
 		}
 		private readonly DatabaseContext _context;
 
-		//just to test with Postman, etc.
-		[HttpGet]
-		public string Ping() 
-		{
-			return "hello world";
-		}
-
 		//Get all boat entities in DB
 		[Route("GetBoats")]
 		[HttpGet]
@@ -38,7 +31,6 @@ namespace FishfryTours.Controllers
 				var boats = _context.Boats;
 				string boatJson = JsonSerializer.Serialize(boats);
 				return boatJson;
-
 			}
 			catch(Exception e)
 			{
@@ -56,7 +48,6 @@ namespace FishfryTours.Controllers
 				if (ModelState.IsValid)
 				{
 					_context.Add(boat);
-	
 					_context.SaveChanges();	
 					return Ok(boat.Id);
 				}
@@ -88,7 +79,6 @@ namespace FishfryTours.Controllers
 			{
 				return BadRequest(e.Message);
 			}
-			
 		}
 
 		[Route("UpdateBoat")]
@@ -113,7 +103,6 @@ namespace FishfryTours.Controllers
 			{
 				return BadRequest(e.Message);
 			}
-
 		}
 
 
@@ -150,7 +139,7 @@ namespace FishfryTours.Controllers
 				{
 					_context.Add(guide);
 					await _context.SaveChangesAsync();
-					return Ok();
+					return Ok(guide.Id);
 				}
 				else
 					throw new Exception("Model state was not valid adding guide to database");
@@ -184,7 +173,7 @@ namespace FishfryTours.Controllers
 			}
 		}
 
-		//Destroy boat entity in DB
+		//Destroy guide entity in DB
 		[HttpPost]
 		public async Task<IActionResult> DeleteGuide(int id)
 		{
@@ -202,19 +191,9 @@ namespace FishfryTours.Controllers
 			{
 				return BadRequest(e.Message);
 			}
-
 		}
 
-
-		////Assign a guide to a boat
-		//[HttpPost]
-		//public IActionResult AssignGuideToBoat(int boatId, int guideId)
-		//{
-
-		//	return Ok();
-		//}
-
-
+		//Views
 		public async Task<IActionResult> Boats()
 		{
 
