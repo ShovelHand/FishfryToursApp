@@ -127,7 +127,8 @@ class MainContent extends React.Component {
             this.setState({ ...this.state.data, boats });
         }
      
-
+        var deleteButton = document.getElementById("deleteDropButton");
+        deleteButton.style.backgroundColor = "blue";
     };
 
     handleDelete = () => {
