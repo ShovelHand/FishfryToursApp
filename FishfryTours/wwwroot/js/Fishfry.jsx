@@ -199,12 +199,12 @@ class NewBoatPanel extends React.Component {
     }
     render() {
         return (
-            <div className="newBoatInput">
+            <form className="newBoatInput">
                 <span>Add new boat?</span><br/>
                 <span id="addButtonLabel">Boat's name:</span>
                 <input type="text" id="fname" name="fname" />
-                <div id="newBoatButton" onClick={this.addNew} > Add </div>
-            </div>
+                <button id="newBoatButton" onClick={this.addNew} > Add </button>
+            </form>
         );
     }
 }
@@ -236,6 +236,7 @@ class DeleteDropArea extends React.Component {
         return (
            
             <div className="deleteDropBox">
+                <p>drop here to delete</p>
                 {loader}
                 <div id="deleteDropButton" 
                     onDragOver={e => this.onDragOver(e)}

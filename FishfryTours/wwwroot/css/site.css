@@ -125,7 +125,8 @@ body {
     border-width: thin;
     padding: 5px;
     display: inline-block;
-    margin-left: 12%;
+    margin-left: 4%;
+    text-align: center;
 }
 
 #addButtonLabel {
