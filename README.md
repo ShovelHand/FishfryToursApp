@@ -60,4 +60,4 @@ I've been doing all my work with guides through API calls through postman.
 <h2>DevOps Pipeline</h2>
 A continuous deployment pipeline using Github Actions between this Git repository and the Azure App services is established. When commits are pushed to the remote repository from Git, they are automatically published
 to Azure. I followed this tutorial: https://docs.microsoft.com/en-us/azure/app-service/deploy-continuous-deployment?tabs=github
-<p>I'm not sure what details to provide here other than that it's in place.</p>
+<p>Note that deploying through GitHub Actions includes build error messaging.</p>
