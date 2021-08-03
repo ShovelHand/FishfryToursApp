@@ -55,6 +55,7 @@ I've been doing all my work with guides through API calls through postman.
 <h2>QA</h2>
 <p>Unit testing has been implemented by a .Net Core xUnit test project, included in this repo. It uses Moq to create an in-memory dataset to work from, and allows calls to be made to BoatsController.cs using this dataset. </p>
 <p>Endpoints tested through these unit tests include GetBoats, CreateBoat, UpdateBoat, DeleteBoat, UpdateGuide and CreateGuide, which represents wide coverage of the back-end API calls. </p>
+<p>As per assessment instructions, I've included a paragraph about testing in "ApproachToTesting.pdf", included in the root of this repo.</p>
 
 
 <h2>DevOps Pipeline</h2>
