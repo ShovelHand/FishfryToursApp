@@ -53,7 +53,9 @@ While this may not be all that useful for users out on boats, it would certainly
 I've been doing all my work with guides through API calls through postman. 
 
 <h2>QA</h2>
-Unit tests are coming next
+<p>Unit testing has been implemented by a .Net Core xUnit test project, included in this repo. It uses Moq to create an in-memory dataset to work from, and allows calls to be made to BoatsController.cs using this dataset. </p>
+<p>Endpoints tested through these unit tests include GetBoats, CreateBoat, UpdateBoat, DeleteBoat, UpdateGuide and CreateGuide, which represents wide coverage of the back-end API calls. </p>
+
 
 <h2>DevOps Pipeline</h2>
 A continuous deployment pipeline using Github Actions between this Git repository and the Azure App services is established. When commits are pushed to the remote repository from Git, they are automatically published
