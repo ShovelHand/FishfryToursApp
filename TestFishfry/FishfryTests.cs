@@ -31,8 +31,9 @@ namespace TestFishfry
 			mockSet.As<IQueryable<Boat>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
 			var mockContext = new Mock<DatabaseContext>();
 			mockContext.Setup(c => c.Boats).Returns(mockSet.Object);
+			
 			BoatsController controller = new BoatsController(mockContext.Object);
-
+			var result = controller.CreateBoat(data.First());
 			var boats = controller.GetBoats();
 			//simply verify that a boats string is returned
 			Assert.NotNull(boats);
@@ -62,7 +63,7 @@ namespace TestFishfry
 		}
 
 		[Fact]
-		public void DeleteBoate_ReturnsOk(){
+		public void DeleteBoat_ReturnsOk(){
 			var data = new List<Boat>
 			{
 				new Boat { Id = 1, Name = "BBB", Status="docked" },
@@ -85,7 +86,8 @@ namespace TestFishfry
 
 		}
 
-		[Fact] void UpdateBoat_ReturnsOK(){
+		[Fact] 
+		void UpdateBoat_SetsNewStatus(){
 			var data = new List<Boat>
 			{
 				new Boat { Id = 1, Name = "BBB", Status="docked" },
@@ -100,8 +102,52 @@ namespace TestFishfry
 			mockContext.Setup(c => c.Boats).Returns(mockSet.Object);
 
 			BoatsController controller = new BoatsController(mockContext.Object);
-			var result = controller.UpdateBoat(1, "testStatus");
+			var result = controller.CreateBoat(data.First());
+			string testStatus = "testStatus";
+			controller.UpdateBoat(1, testStatus);
+			Assert.Equal(data.First().Status, testStatus);
+		}
+
+		[Fact]
+		void UpdateGuide_Works(){
+			var data = new List<Guide>
+			{
+				new Guide { Id = 1, Name = "Guide1", AssignedBoatId=1 },
+
+			}.AsQueryable();
+			var mockSet = new Mock<DbSet<Guide>>();
+			mockSet.As<IQueryable<Guide>>().Setup(m => m.Provider).Returns(data.Provider);
+			mockSet.As<IQueryable<Guide>>().Setup(m => m.Expression).Returns(data.Expression);
+			mockSet.As<IQueryable<Guide>>().Setup(m => m.ElementType).Returns(data.ElementType);
+			mockSet.As<IQueryable<Guide>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+			var mockContext = new Mock<DatabaseContext>();
+			mockContext.Setup(c => c.Guides).Returns(mockSet.Object);
+
+			BoatsController controller = new BoatsController(mockContext.Object);
+			const int two = 2;
+			var result = controller.UpdateGuide(data.First().Id, two);
 			var okResult = result as OkResult;
+			Assert.NotNull(okResult);
+			Assert.Equal(200, okResult.StatusCode);
+			Assert.Equal(data.First().AssignedBoatId, two);
+
+		}
+		[Fact]
+		void CreateGuide_ReturnsOK()
+		{
+			var data = new List<Guide>
+			{
+				new Guide { Id = 1, Name = "Guide1", AssignedBoatId=1 },
+
+			}.AsQueryable();
+			var mockSet = new Mock<DbSet<Guide>>();
+			var mockContext = new Mock<DatabaseContext>();
+			mockContext.Setup(c => c.Guides).Returns(mockSet.Object);
+
+			BoatsController controller = new BoatsController(mockContext.Object);
+			var result = controller.CreateGuide(data.First());
+			var okResult = result as OkObjectResult;
+
 			Assert.NotNull(okResult);
 			Assert.Equal(200, okResult.StatusCode);
 		}

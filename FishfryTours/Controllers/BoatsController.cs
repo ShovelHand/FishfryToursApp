@@ -83,17 +83,17 @@ namespace FishfryTours.Controllers
 
 		[Route("UpdateBoat")]
 		[HttpPost]
-		public async Task<IActionResult> UpdateBoat(int id, string status = "")
+		public IActionResult UpdateBoat(int id, string status = "")
 		{
 			try
 			{
-				Boat boat = _context.Boats.Find(id);
+				Boat boat = _context.Boats.FirstOrDefault(x => x.Id == id);
 				if (ModelState.IsValid && boat != null)
 				{
 					if (!string.IsNullOrEmpty(status))
 						boat.Status = status;
 					_context.Update(boat);
-					await _context.SaveChangesAsync();
+					_context.SaveChanges();
 					return Ok();
 				}
 				else
@@ -131,14 +131,14 @@ namespace FishfryTours.Controllers
 		//Create new guide entity in DB
 		[Route("CreateGuide")]
 		[HttpPost]
-		public async Task<IActionResult> CreateGuide([Bind("Name,AssignedBoatId")] Guide guide)
+		public IActionResult CreateGuide([Bind("Name,AssignedBoatId")] Guide guide)
 		{
 			try
 			{
 				if (ModelState.IsValid)
 				{
 					_context.Add(guide);
-					await _context.SaveChangesAsync();
+					_context.SaveChanges();
 					return Ok(guide.Id);
 				}
 				else
@@ -157,7 +157,7 @@ namespace FishfryTours.Controllers
 		{
 			try
 			{
-				Guide guide = _context.Guides.Find(id);
+				Guide guide = _context.Guides.FirstOrDefault(x => x.Id == id);
 				guide.AssignedBoatId = assignedBoatId;
 				if(ModelState.IsValid && guide != null)
 				{
@@ -179,7 +179,7 @@ namespace FishfryTours.Controllers
 		{
 			try
 			{
-				Guide guide = _context.Guides.Find(id);
+				Guide guide = _context.Guides.FirstOrDefault(x => x.Id == id);
 				if (ModelState.IsValid && guide != null)
 				{
 					_context.Remove(guide);
