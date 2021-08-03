@@ -62,7 +62,7 @@ namespace FishfryTours.Controllers
 
 		//Destroy boat entity in DB
 		[Route("DeleteBoat")]
-		[HttpPost]
+		[HttpDelete]
 		public IActionResult DeleteBoat(int id)
 		{
 			try
@@ -83,7 +83,7 @@ namespace FishfryTours.Controllers
 
 		//used to set a boat's status in the DB, like "docked", "maintenance", etc.
 		[Route("UpdateBoat")]
-		[HttpPost]
+		[HttpPut]
 		public IActionResult UpdateBoat(int id, string status = "")
 		{
 			try
@@ -153,7 +153,7 @@ namespace FishfryTours.Controllers
 
 		//update Guide info in DB (phone, email, etc.)
 		[Route("UpdateGuide")]
-		[HttpPost]
+		[HttpPut]
 		public IActionResult UpdateGuide(int id, int assignedBoatId) // not yet sure if we'll track boat to guide, or guide to boat
 		{
 			try
@@ -176,7 +176,7 @@ namespace FishfryTours.Controllers
 
 		//Destroy guide entity in DB
 		[Route("DeleteGuide")]
-		[HttpPost]
+		[HttpDelete]
 		public async Task<IActionResult> DeleteGuide(int id)
 		{
 			try

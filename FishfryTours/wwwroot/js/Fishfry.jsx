@@ -17,7 +17,7 @@ class MainContent extends React.Component {
     //update boat status in DB after moved to new swimlane
     updateBoatStatus = (id, status) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('post', "UpdateBoat?id=" + id + "&status=" + status, true);
+        xhr.open('put', "UpdateBoat?id=" + id + "&status=" + status, true);
         xhr.onreadystatechange = () => {
             switch (xhr.status) {
                 case 200:
@@ -67,7 +67,7 @@ class MainContent extends React.Component {
         this.state.data.pop(this.state.data.filter(t => t.Id === id));
         this.setState({ ...this.state.data });
         const xhr = new XMLHttpRequest();
-        xhr.open('post', "DeleteBoat?id=" + id, true);
+        xhr.open('delete', "DeleteBoat?id=" + id, true);
         xhr.onreadystatechange = () => {
             switch (xhr.status) {
                 case 200:
