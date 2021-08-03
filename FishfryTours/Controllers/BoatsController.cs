@@ -63,15 +63,15 @@ namespace FishfryTours.Controllers
 		//Destroy boat entity in DB
 		[Route("DeleteBoat")]
 		[HttpPost]
-		public async Task<IActionResult> DeleteBoat(int id)
+		public IActionResult DeleteBoat(int id)
 		{
 			try
 			{
-				Boat boat = _context.Boats.Find(id);
+				Boat boat = _context.Boats.FirstOrDefault(x => x.Id == id);
 				if(ModelState.IsValid && boat != null)
 				{
 					_context.Remove(boat);
-					await _context.SaveChangesAsync();
+					_context.SaveChanges();
 				}
 				return Ok();
 			}

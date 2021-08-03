@@ -11,6 +11,7 @@ namespace FishfryTours.Models
 
 	public class DatabaseContext : DbContext
 	{
+		public DatabaseContext() { }
 		public DatabaseContext(DbContextOptions options) : 
 		
 		
@@ -19,13 +20,13 @@ namespace FishfryTours.Models
 		}
 
 		
-		public DbSet<Boat> Boats 
+		public virtual DbSet<Boat> Boats 
 		{ 
 			get; 
 			set; 
 		}
 
-		public DbSet<Guide> Guides { get; set; }
+		public virtual DbSet<Guide> Guides { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
