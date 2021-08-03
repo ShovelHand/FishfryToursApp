@@ -81,6 +81,7 @@ namespace FishfryTours.Controllers
 			}
 		}
 
+		//used to set a boat's status in the DB, like "docked", "maintenance", etc.
 		[Route("UpdateBoat")]
 		[HttpPost]
 		public IActionResult UpdateBoat(int id, string status = "")
@@ -174,6 +175,7 @@ namespace FishfryTours.Controllers
 		}
 
 		//Destroy guide entity in DB
+		[Route("DeleteGuide")]
 		[HttpPost]
 		public async Task<IActionResult> DeleteGuide(int id)
 		{
@@ -200,6 +202,7 @@ namespace FishfryTours.Controllers
 			return View(await _context.Boats.ToListAsync());
 		}
 
+		/*Guides view is not complete yet */
 		public async Task<IActionResult> Guides()
 		{
 

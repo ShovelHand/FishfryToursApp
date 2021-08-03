@@ -173,3 +173,4 @@ C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Debug\n
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Debug\netcoreapp3.1\FishfryTours.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Debug\netcoreapp3.1\FishfryTours.pdb
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Debug\netcoreapp3.1\FishfryTours.genruntimeconfig.cache
+C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\FIshfryTours\obj\Debug\netcoreapp3.1\FishfryTours.csproj.AssemblyReference.cache

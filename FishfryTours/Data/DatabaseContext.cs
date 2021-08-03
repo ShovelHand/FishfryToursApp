@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace FishfryTours.Models
 {
 	//FishfryDBConnection
-
 	public class DatabaseContext : DbContext
 	{
 		public DatabaseContext() { }
@@ -30,8 +29,6 @@ namespace FishfryTours.Models
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			//	modelBuilder.Entity<Boat>().HasNoKey();
-			//	modelBuilder.Entity<Guide>().HasNoKey();
 			modelBuilder.Entity<Boat>(entity =>
 			{
 				entity.HasKey(e => e.Id);
