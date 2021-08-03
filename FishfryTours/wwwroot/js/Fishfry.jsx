@@ -179,7 +179,7 @@ class MainContent extends React.Component {
         return (
             <div className="mainContent">
                 <h1>Fishfry Tours</h1>
-                <h4>Fleet and Guide status</h4>
+                <h2>Fleet and Guide status</h2>
                 <div className="topUIElements">
                     <NewBoatPanel handleNewBoat={this.handleNewBoat} />
                     <DeleteDropArea handleDelete={this.handleDelete} isClicked={this.state.isClicked} handleClose={this.handleClose} currentId={this.state.currentId} deleteBoat={this.deleteBoat} />
