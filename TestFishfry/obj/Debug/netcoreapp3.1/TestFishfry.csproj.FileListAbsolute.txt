@@ -1,3 +1,5 @@
+C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\ClearScriptV8.win-x86.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\CoverletSourceRootsMapping
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\testhost.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\FishfryTours.Views.dll
@@ -57,7 +59,6 @@ C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\ne
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Logging.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\Microsoft.TestPlatform.CoreUtilities.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\Microsoft.TestPlatform.CommunicationUtilities.dll
@@ -152,7 +153,6 @@ C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\ne
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\ClearScriptV8.win-x64.dll
-C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\ClearScriptV8.win-x86.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
 C:\Users\Alex\source\repos\FishfryTours\FishfryToursApp\TestFishfry\bin\Debug\netcoreapp3.1\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
